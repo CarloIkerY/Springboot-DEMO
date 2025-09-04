@@ -3,6 +3,8 @@ package com.example.demo.repo;
 import com.example.demo.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+import java.util.Optional;
 
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+    Optional<Cliente> findByNombreAndEmailAndTelefono(String nombre, String email, String telefono);
 }

@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClienteDTO {
-    private String name;
-    private String email;
-    private String telefono;
+public class AutoDTO {
+    private String marca;
+    private String modelo;
+    private Integer anio;
+    private String placa;
 }

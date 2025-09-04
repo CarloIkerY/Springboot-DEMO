@@ -23,8 +23,17 @@ public class Auto {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    @Column(nullable = false, length = 15)
     private String marca;
+
+    @Column(nullable = false, length = 15)
     private String modelo;
+
+    @Column(nullable = false, length = 4)
+    private Integer anio;
+
+    @Column(nullable = false, length = 15)
+    private String placa;
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cotizacion> cotizaciones;
