@@ -2,16 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
-import com.example.demo.dto.ClienteDTO;
 import com.example.demo.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/clientes")
 @RequiredArgsConstructor
-public class RegistrarCliente {
+public class Cliente {
 
     private final ClienteService clienteService;
 
@@ -42,4 +43,25 @@ public class RegistrarCliente {
         ClienteConAutoDTO clienteCreado = clienteService.createClienteConAuto(dto);
         return ResponseEntity.ok(clienteCreado);
     }
+
+    @GetMapping("/buscar/placa")
+    public ResponseEntity<?> buscarClientesPorPlaca(@RequestParam String placa) {
+        if (placa == null || placa.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("La placa no puede estar vacía.");
+        }
+
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByPlaca(placa);
+        return ResponseEntity.ok(clientes);
+    }
+
+    @GetMapping("/buscar/telefono")
+    public ResponseEntity<?> buscarClientesPorTelefono(@RequestParam String telefono) {
+        if (telefono == null || telefono.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("El número de teléfono no puede estar vacío.");
+        }
+
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByTelefono(telefono);
+        return ResponseEntity.ok(clientes);
+    }
+    
 }
