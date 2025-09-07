@@ -112,6 +112,22 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
+    public List<ClienteConAutoDTO> findClientesByNombre(String nombre) {
+        List<Cliente> clientes = clienteRepository.findByNombre(nombre);
+
+        return clientes.stream()
+                .map(this::toClienteConAutosRespuestaDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ClienteConAutoDTO> findClientesByEmail(String email) {
+        List<Cliente> clientes = clienteRepository.findByEmail(email);
+
+        return clientes.stream()
+                .map(this::toClienteConAutosRespuestaDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<ClienteConAutoDTO> findClientesByTelefono(String telefono) {
         List<Cliente> clientes = clienteRepository.findByTelefono(telefono);
 

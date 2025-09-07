@@ -3,6 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,5 +29,5 @@ public class Cliente {
     private String email;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Auto> autos;
+    private List<Auto> autos = new ArrayList<>(); //Lo hacemos para inicializar la lista
 }

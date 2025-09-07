@@ -54,6 +54,26 @@ public class Cliente {
         return ResponseEntity.ok(clientes);
     }
 
+    @GetMapping("/buscar/nombre")
+    public ResponseEntity<?> buscarClientesPorNombre(@RequestParam String nombre) {
+        if(nombre == null || nombre.trim().isEmpty()){
+            return ResponseEntity.badRequest().body("El nombre es obligatorio.");
+        }
+
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByNombre(nombre);
+        return ResponseEntity.ok(clientes);
+    }
+
+    @GetMapping("/buscar/email")
+    public ResponseEntity<?> buscarClientesPorEmail(@RequestParam String email) {
+        if(email == null || email.trim().isEmpty()){
+            return ResponseEntity.badRequest().body("El email es obligatorio.");
+        }
+
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByEmail(email);
+        return ResponseEntity.ok(clientes);
+    }
+
     @GetMapping("/buscar/telefono")
     public ResponseEntity<?> buscarClientesPorTelefono(@RequestParam String telefono) {
         if (telefono == null || telefono.trim().isEmpty()) {
@@ -63,5 +83,4 @@ public class Cliente {
         List<ClienteConAutoDTO> clientes = clienteService.findClientesByTelefono(telefono);
         return ResponseEntity.ok(clientes);
     }
-    
 }

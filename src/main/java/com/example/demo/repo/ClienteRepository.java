@@ -13,6 +13,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     @Query("SELECT c FROM Cliente c JOIN c.autos a WHERE a.placa = :placa")
     List<Cliente> findByPlacaAuto(String placa);
 
+    List<Cliente> findByNombre(String nombre);
+    List<Cliente> findByEmail(String email);
     List<Cliente> findByTelefono(String telefono);
-
 }
