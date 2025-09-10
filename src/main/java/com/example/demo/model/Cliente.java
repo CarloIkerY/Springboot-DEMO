@@ -30,4 +30,9 @@ public class Cliente {
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Auto> autos = new ArrayList<>(); //Lo hacemos para inicializar la lista
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id") // quien lo creó
+    private Usuario creadoPor;
+
 }

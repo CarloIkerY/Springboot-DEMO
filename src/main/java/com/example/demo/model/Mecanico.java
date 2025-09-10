@@ -17,11 +17,16 @@ import java.util.List;
 public class Mecanico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer seguimiento_id;
+    private Integer mecanico_id;
 
     private String nombre;
     private String especialidad;
 
     @OneToMany(mappedBy = "mecanico", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seguimiento> seguimiento;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
 }
