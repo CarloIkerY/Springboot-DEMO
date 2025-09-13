@@ -32,5 +32,5 @@ public class Cliente {
     private String password;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Auto> autos = new ArrayList<>(); //Lo hacemos para inicializar la lista
+    private List<Auto> autos = new ArrayList<>();
 }
