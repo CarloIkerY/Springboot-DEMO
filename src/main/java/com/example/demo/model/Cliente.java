@@ -25,8 +25,11 @@ public class Cliente {
     @Column(nullable = false, length = 10)
     private String telefono;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 100)
     private String email;
+
+    @Column(nullable = false, length = 100)
+    private String password;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Auto> autos = new ArrayList<>(); //Lo hacemos para inicializar la lista
@@ -34,5 +37,4 @@ public class Cliente {
     @ManyToOne
     @JoinColumn(name = "usuario_id") // quien lo creó
     private Usuario creadoPor;
-
 }

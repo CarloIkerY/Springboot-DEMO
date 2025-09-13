@@ -28,6 +28,10 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("El email es obligatorio.");
         }
 
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Seleccione una contraseña");
+        }
+
         // ✅ Validación de la lista de autos
         if (dto.getAutos() == null || dto.getAutos().isEmpty()) {
             return ResponseEntity.badRequest().body("Debe incluir al menos un auto.");

@@ -7,6 +7,7 @@ import com.example.demo.model.Auto;
 import com.example.demo.model.Cliente;
 import com.example.demo.repo.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +18,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClienteService {
     private final ClienteRepository clienteRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ClienteDTO createUser(ClienteDTO dto){
         Cliente cliente = Cliente.builder()
                 .nombre(dto.getName())
-                .email(dto.getEmail())
+                .email(passwordEncoder.encode(dto.getEmail()))
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .telefono(dto.getTelefono())
                 .build();
 
@@ -57,7 +60,8 @@ public class ClienteService {
             // ❌ Cliente no existe → crear cliente con auto
             cliente = Cliente.builder()
                     .nombre(dto.getName())
-                    .email(dto.getEmail())
+                    .email(passwordEncoder.encode(dto.getEmail()))
+                    .password(passwordEncoder.encode(dto.getPassword()))
                     .telefono(dto.getTelefono())
                     .build();
 
@@ -91,6 +95,7 @@ public class ClienteService {
         return ClienteConAutoDTO.builder()
                 .name(cliente.getNombre())
                 .email(cliente.getEmail())
+                .password(cliente.getPassword())
                 .telefono(cliente.getTelefono())
                 .autos(autosDTO)
                 .build();
@@ -140,6 +145,7 @@ public class ClienteService {
         return ClienteDTO.builder()
                 .name(cliente.getNombre())
                 .email(cliente.getEmail())
+                .password(cliente.getPassword())
                 .telefono(cliente.getTelefono())
                 .build();
     }

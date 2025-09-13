@@ -14,6 +14,7 @@ import java.util.List;
 public class ClienteConAutoDTO {
     private String name;
     private String email;
+    private String password;
     private String telefono;
     private List<AutoDTO> autos;
 }
