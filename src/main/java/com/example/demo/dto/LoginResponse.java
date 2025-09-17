@@ -1,11 +1,19 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
 public class LoginResponse {
     private String nombre;
-    private String rol;
+    private Long usuarioId;
+
+    public LoginResponse(String nombre, Long usuarioId) {
+        this.nombre = nombre;
+        this.usuarioId = usuarioId;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public Long getUsuarioId() {
+        return usuarioId;
+    }
 }

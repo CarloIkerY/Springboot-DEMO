@@ -27,7 +27,7 @@ public class LoginController {
             Usuario usuario = usuarioOpt.get();
             LoginResponse response = new LoginResponse(
                     usuario.getNombre(),
-                    usuario.getRol().getNombre()
+                    usuario.getId() // aquí enviamos usuarioId en lugar de rol
             );
             return ResponseEntity.ok(response);
         } else {

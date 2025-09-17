@@ -24,7 +24,7 @@ public class ClienteService {
         Cliente cliente = Cliente.builder()
                 .nombre(dto.getName())
                 .email(passwordEncoder.encode(dto.getEmail()))
-                .password(passwordEncoder.encode(dto.getPassword()))
+                //.password(passwordEncoder.encode(dto.getPassword()))
                 .telefono(dto.getTelefono())
                 .build();
 
@@ -61,7 +61,7 @@ public class ClienteService {
             cliente = Cliente.builder()
                     .nombre(dto.getName())
                     .email(passwordEncoder.encode(dto.getEmail()))
-                    .password(passwordEncoder.encode(dto.getPassword()))
+                    //.password(passwordEncoder.encode(dto.getPassword()))
                     .telefono(dto.getTelefono())
                     .build();
 
@@ -95,7 +95,7 @@ public class ClienteService {
         return ClienteConAutoDTO.builder()
                 .name(cliente.getNombre())
                 .email(cliente.getEmail())
-                .password(cliente.getPassword())
+                //.password(cliente.getPassword())
                 .telefono(cliente.getTelefono())
                 .autos(autosDTO)
                 .build();
@@ -145,7 +145,7 @@ public class ClienteService {
         return ClienteDTO.builder()
                 .name(cliente.getNombre())
                 .email(cliente.getEmail())
-                .password(cliente.getPassword())
+                //.password(cliente.getPassword())
                 .telefono(cliente.getTelefono())
                 .build();
     }

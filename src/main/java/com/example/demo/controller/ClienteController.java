@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
+import com.example.demo.security.AuthorizationService;
 import com.example.demo.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,14 @@ import java.util.List;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final AuthorizationService authorizationService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<?> registrarClienteConAuto(@RequestBody ClienteConAutoDTO dto) {
+    public ResponseEntity<?> registrarClienteConAuto(@RequestBody ClienteConAutoDTO dto, @RequestParam Long usuarioId) {
+
+        if (!authorizationService.tieneAcceso(usuarioId, 1L, 2L)) {
+            return ResponseEntity.status(403).body("Acceso denegado: solo ADMIN o AGENTE pueden registrar clientes.");
+        }
 
         // Validación manual
         if (dto.getName() == null || dto.getName().trim().isEmpty()) {
@@ -28,9 +34,9 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("El email es obligatorio.");
         }
 
-        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Seleccione una contraseña");
-        }
+//        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+//            return ResponseEntity.badRequest().body("Seleccione una contraseña");
+//        }
 
         // ✅ Validación de la lista de autos
         if (dto.getAutos() == null || dto.getAutos().isEmpty()) {
@@ -49,7 +55,12 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar/placa")
-    public ResponseEntity<?> buscarClientesPorPlaca(@RequestParam String placa) {
+    public ResponseEntity<?> buscarClientesPorPlaca(@RequestParam String placa, @RequestParam Long usuarioId) {
+
+        if (!authorizationService.tieneAcceso(usuarioId, 1L, 2L)) {
+            return ResponseEntity.status(403).body("Acceso denegado: solo ADMIN o AGENTE pueden registrar clientes.");
+        }
+
         if (placa == null || placa.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("La placa no puede estar vacía.");
         }
@@ -59,7 +70,12 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar/nombre")
-    public ResponseEntity<?> buscarClientesPorNombre(@RequestParam String nombre) {
+    public ResponseEntity<?> buscarClientesPorNombre(@RequestParam String nombre, @RequestParam Long usuarioId) {
+
+        if (!authorizationService.tieneAcceso(usuarioId, 1L, 2L)) {
+            return ResponseEntity.status(403).body("Acceso denegado: solo ADMIN o AGENTE pueden registrar clientes.");
+        }
+
         if(nombre == null || nombre.trim().isEmpty()){
             return ResponseEntity.badRequest().body("El nombre es obligatorio.");
         }
@@ -69,7 +85,12 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar/email")
-    public ResponseEntity<?> buscarClientesPorEmail(@RequestParam String email) {
+    public ResponseEntity<?> buscarClientesPorEmail(@RequestParam String email, @RequestParam Long usuarioId) {
+
+        if (!authorizationService.tieneAcceso(usuarioId, 1L, 2L)) {
+            return ResponseEntity.status(403).body("Acceso denegado: solo ADMIN o AGENTE pueden registrar clientes.");
+        }
+
         if(email == null || email.trim().isEmpty()){
             return ResponseEntity.badRequest().body("El email es obligatorio.");
         }
@@ -79,7 +100,12 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar/telefono")
-    public ResponseEntity<?> buscarClientesPorTelefono(@RequestParam String telefono) {
+    public ResponseEntity<?> buscarClientesPorTelefono(@RequestParam String telefono, @RequestParam Long usuarioId) {
+
+        if (!authorizationService.tieneAcceso(usuarioId, 1L, 2L)) {
+            return ResponseEntity.status(403).body("Acceso denegado: solo ADMIN o AGENTE pueden registrar clientes.");
+        }
+
         if (telefono == null || telefono.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("El número de teléfono no puede estar vacío.");
         }
