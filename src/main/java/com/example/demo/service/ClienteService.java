@@ -23,7 +23,7 @@ public class ClienteService {
     public ClienteDTO createUser(ClienteDTO dto){
         Cliente cliente = Cliente.builder()
                 .nombre(dto.getName())
-                .email(passwordEncoder.encode(dto.getEmail()))
+                .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .telefono(dto.getTelefono())
                 .build();
@@ -60,7 +60,7 @@ public class ClienteService {
             // ❌ Cliente no existe → crear cliente con auto
             cliente = Cliente.builder()
                     .nombre(dto.getName())
-                    .email(passwordEncoder.encode(dto.getEmail()))
+                    .email(dto.getEmail())
                     .password(passwordEncoder.encode(dto.getPassword()))
                     .telefono(dto.getTelefono())
                     .build();

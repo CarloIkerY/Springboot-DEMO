@@ -5,8 +5,11 @@ import com.example.demo.model.Usuario;
 import com.example.demo.repo.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.Encoder;
 import java.util.Optional;
 
 @RestController
@@ -15,23 +18,27 @@ import java.util.Optional;
 public class LoginController {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario loginRequest) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmailAndContrasena(
-                loginRequest.getEmail(),
-                loginRequest.getContrasena()
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(
+                loginRequest.getEmail()
         );
 
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-            LoginResponse response = new LoginResponse(
-                    usuario.getNombre(),
-                    usuario.getRol().getNombre()
-            );
-            return ResponseEntity.ok(response);
+            if(passwordEncoder.matches(loginRequest.getContrasena(),usuario.getContrasena())) {
+                LoginResponse response = new LoginResponse(
+                        usuario.getNombre(),
+                        usuario.getRol().getNombre()
+                );
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(401).body("Contraseña incorrecta");
+            }
         } else {
-            return ResponseEntity.status(401).body("Credenciales inválidas");
+            return ResponseEntity.status(404).body("Credenciales inválidas");
         }
     }
 

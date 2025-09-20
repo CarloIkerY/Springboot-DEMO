@@ -6,6 +6,7 @@ import com.example.demo.repo.RolRepository;
 import com.example.demo.repo.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,11 +27,12 @@ public class DataInitializer {
             rolRepository.save(agente);
             rolRepository.save(mecanico);
 
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             usuarioRepository.save(Usuario.builder()
                     .nombre("Admin")
                     .apellido("Principal")
                     .email("admin@admin.com")
-                    .contrasena("admin123") // Luego usar BCrypt
+                    .contrasena(encoder.encode("admin123")) // Luego usar BCrypt
                     .rol(admin)
                     .build());
 
@@ -38,7 +40,7 @@ public class DataInitializer {
                     .nombre("Agente")
                     .apellido("Ventas")
                     .email("agente@demo.com")
-                    .contrasena("agente123")
+                    .contrasena(encoder.encode("agente123"))
                     .rol(agente)
                     .build());
 
@@ -46,7 +48,7 @@ public class DataInitializer {
                     .nombre("Carlos")
                     .apellido("Mecánico")
                     .email("mecanico@demo.com")
-                    .contrasena("mecanico123")
+                    .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
                     .build());
         }
