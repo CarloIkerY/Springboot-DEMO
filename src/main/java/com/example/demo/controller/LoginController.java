@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.config.AESUtil;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.model.Usuario;
 import com.example.demo.repo.UsuarioRepository;
@@ -22,8 +23,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario loginRequest) {
+        String encryptedEmail = AESUtil.encrypt(loginRequest.getEmail());
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(
-                loginRequest.getEmail()
+                encryptedEmail
         );
 
         if (usuarioOpt.isPresent()) {

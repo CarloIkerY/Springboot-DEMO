@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.config.AESUtil;
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
 import com.example.demo.dto.ClienteDTO;
@@ -22,10 +23,10 @@ public class ClienteService {
 
     public ClienteDTO createUser(ClienteDTO dto){
         Cliente cliente = Cliente.builder()
-                .nombre(dto.getName())
-                .email(dto.getEmail())
+                .nombre(AESUtil.encrypt(dto.getName()))
+                .email(AESUtil.encrypt(dto.getEmail()))
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .telefono(dto.getTelefono())
+                .telefono(AESUtil.encrypt(dto.getTelefono()))
                 .build();
 
         cliente = clienteRepository.save(cliente);
@@ -51,7 +52,7 @@ public class ClienteService {
                     .marca(autoDTO.getMarca())
                     .modelo(autoDTO.getModelo())
                     .anio(autoDTO.getAnio())
-                    .placa(autoDTO.getPlaca())
+                    .placa(AESUtil.encrypt(autoDTO.getPlaca()))
                     .cliente(cliente)
                     .build();
 
@@ -59,17 +60,17 @@ public class ClienteService {
         } else {
             // ❌ Cliente no existe → crear cliente con auto
             cliente = Cliente.builder()
-                    .nombre(dto.getName())
-                    .email(dto.getEmail())
+                    .nombre(AESUtil.encrypt(dto.getName()))
+                    .email(AESUtil.encrypt(dto.getEmail()))
                     .password(passwordEncoder.encode(dto.getPassword()))
-                    .telefono(dto.getTelefono())
+                    .telefono(AESUtil.encrypt(dto.getTelefono()))
                     .build();
 
             Auto auto = Auto.builder()
                     .marca(autoDTO.getMarca())
                     .modelo(autoDTO.getModelo())
                     .anio(autoDTO.getAnio())
-                    .placa(autoDTO.getPlaca())
+                    .placa(AESUtil.encrypt(autoDTO.getPlaca()))
                     .cliente(cliente)
                     .build();
 
@@ -88,7 +89,7 @@ public class ClienteService {
                         .marca(auto.getMarca())
                         .modelo(auto.getModelo())
                         .anio(auto.getAnio())
-                        .placa(auto.getPlaca())
+                        .placa(AESUtil.encrypt(auto.getPlaca()))
                         .build()
         ).toList();
 

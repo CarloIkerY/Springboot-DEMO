@@ -29,25 +29,25 @@ public class DataInitializer {
 
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             usuarioRepository.save(Usuario.builder()
-                    .nombre("Admin")
-                    .apellido("Principal")
-                    .email("admin@admin.com")
+                    .nombre(AESUtil.encrypt("Admin"))
+                    .apellido(AESUtil.encrypt("Principal"))
+                    .email(AESUtil.encrypt("admin@admin.com"))
                     .contrasena(encoder.encode("admin123")) // Luego usar BCrypt
                     .rol(admin)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
-                    .nombre("Agente")
-                    .apellido("Ventas")
-                    .email("agente@demo.com")
+                    .nombre(AESUtil.encrypt("Agente"))
+                    .apellido(AESUtil.encrypt("Ventas"))
+                    .email(AESUtil.encrypt("agente@demo.com"))
                     .contrasena(encoder.encode("agente123"))
                     .rol(agente)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
-                    .nombre("Carlos")
-                    .apellido("Mecánico")
-                    .email("mecanico@demo.com")
+                    .nombre(AESUtil.encrypt("Carlos"))
+                    .apellido(AESUtil.encrypt("Mecánico"))
+                    .email(AESUtil.encrypt("mecanico@demo.com"))
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
                     .build());

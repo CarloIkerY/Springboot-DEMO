@@ -22,7 +22,7 @@ public class Cliente {
     @Column(nullable = false, length = 50)
     private String nombre;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 50)
     private String telefono;
 
     @Column(nullable = false, length = 100)
