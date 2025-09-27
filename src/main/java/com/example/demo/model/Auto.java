@@ -32,7 +32,7 @@ public class Auto {
     @Column(nullable = false, length = 4)
     private Integer anio;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 50)
     private String placa;
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
