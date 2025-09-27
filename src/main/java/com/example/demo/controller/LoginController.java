@@ -32,7 +32,7 @@ public class LoginController {
             Usuario usuario = usuarioOpt.get();
             if(passwordEncoder.matches(loginRequest.getContrasena(),usuario.getContrasena())) {
                 LoginResponse response = new LoginResponse(
-                        usuario.getNombre(),
+                        AESUtil.decrypt(usuario.getNombre()),
                         usuario.getRol().getNombre()
                 );
                 return ResponseEntity.ok(response);
