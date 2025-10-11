@@ -89,15 +89,14 @@ public class ClienteService {
                         .marca(auto.getMarca())
                         .modelo(auto.getModelo())
                         .anio(auto.getAnio())
-                        .placa(AESUtil.encrypt(auto.getPlaca()))
+                        .placa(AESUtil.decrypt(auto.getPlaca()))
                         .build()
         ).toList();
 
         return ClienteConAutoDTO.builder()
-                .name(cliente.getNombre())
-                .email(cliente.getEmail())
-                //.password(cliente.getPassword())
-                .telefono(cliente.getTelefono())
+                .name(AESUtil.decrypt(cliente.getNombre()))
+                .email(AESUtil.decrypt(cliente.getEmail()))
+                .telefono(AESUtil.decrypt(cliente.getTelefono()))
                 .autos(autosDTO)
                 .build();
     }

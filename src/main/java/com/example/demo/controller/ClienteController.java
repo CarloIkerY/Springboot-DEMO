@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.config.AESUtil;
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
 import com.example.demo.security.AuthorizationService;
@@ -65,7 +66,8 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("La placa no puede estar vacía.");
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByPlaca(placa);
+        String placaEncriptado = AESUtil.encrypt(placa);
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByPlaca(placaEncriptado);
         return ResponseEntity.ok(clientes);
     }
 
@@ -80,7 +82,8 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("El nombre es obligatorio.");
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByNombre(nombre);
+        String nombreEncriptado = AESUtil.encrypt(nombre);
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByNombre(nombreEncriptado);
         return ResponseEntity.ok(clientes);
     }
 
@@ -95,7 +98,8 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("El email es obligatorio.");
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByEmail(email);
+        String emailEncriptado = AESUtil.encrypt(email);
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByEmail(emailEncriptado);
         return ResponseEntity.ok(clientes);
     }
 
@@ -110,7 +114,8 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("El número de teléfono no puede estar vacío.");
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByTelefono(telefono);
+        String telefonoEncriptado = AESUtil.encrypt(telefono);
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByTelefono(telefonoEncriptado);
         return ResponseEntity.ok(clientes);
     }
 }
