@@ -3,7 +3,11 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@Table(name = "Rol")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +16,11 @@ public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long rol_id;
 
-    private String nombre; // ADMIN, AGENTE, MECANICO
+    @Column(nullable = false)
+    private String nombre;
+
+    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cliente> clientes = new ArrayList<>();
 }

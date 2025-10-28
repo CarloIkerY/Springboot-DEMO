@@ -3,7 +3,11 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@Table(name = "Usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,14 +16,24 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String nombre;
-    private String apellido;
-    private String email;
-    private String contrasena;
+    private Long usuario_id;
 
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String apellido;
+
+    @Column(nullable = false)
+    private String correo;
+
+    @Column(nullable = false)
+    private String contrasena;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Mecanico> mecanicos = new ArrayList<>();
 }

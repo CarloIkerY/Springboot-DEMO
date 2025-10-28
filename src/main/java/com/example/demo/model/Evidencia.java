@@ -23,7 +23,12 @@ public class Evidencia {
     @JoinColumn(name = "cotizacion_id", nullable = false)
     private Cotizacion cotizacion;
 
+    @Column(nullable = false)
     private String tipo;
+
+    @Column(nullable = false)
     private String url;
+
+    @Column(nullable = false)
     private LocalDate fecha_subida;
 }

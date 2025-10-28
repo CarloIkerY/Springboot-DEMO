@@ -31,7 +31,7 @@ public class DataInitializer {
             usuarioRepository.save(Usuario.builder()
                     .nombre(AESUtil.encrypt("Admin"))
                     .apellido(AESUtil.encrypt("Principal"))
-                    .email(AESUtil.encrypt("admin@admin.com"))
+                    .correo(AESUtil.encrypt("admin@admin.com"))
                     .contrasena(encoder.encode("admin123")) // Luego usar BCrypt
                     .rol(admin)
                     .build());
@@ -39,7 +39,7 @@ public class DataInitializer {
             usuarioRepository.save(Usuario.builder()
                     .nombre(AESUtil.encrypt("Agente"))
                     .apellido(AESUtil.encrypt("Ventas"))
-                    .email(AESUtil.encrypt("agente@demo.com"))
+                    .correo(AESUtil.encrypt("agente@demo.com"))
                     .contrasena(encoder.encode("agente123"))
                     .rol(agente)
                     .build());
@@ -47,7 +47,7 @@ public class DataInitializer {
             usuarioRepository.save(Usuario.builder()
                     .nombre(AESUtil.encrypt("Carlos"))
                     .apellido(AESUtil.encrypt("Mecánico"))
-                    .email(AESUtil.encrypt("mecanico@demo.com"))
+                    .correo(AESUtil.encrypt("mecanico@demo.com"))
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
                     .build());

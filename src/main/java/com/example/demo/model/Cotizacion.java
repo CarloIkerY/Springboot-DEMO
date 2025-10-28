@@ -24,8 +24,13 @@ public class Cotizacion {
     @JoinColumn(name = "auto_id", nullable = false)
     private Auto auto;
 
+    @Column(nullable = false)
     private LocalDate fecha;
+
+    @Column(nullable = false)
     private Double costo_total;
+
+    @Column(nullable = false)
     private String estatus;
 
     @OneToMany(mappedBy = "cotizacion", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -35,6 +35,21 @@ public class Auto {
     @Column(nullable = false, length = 50)
     private String placa;
 
+    @Column(nullable = false, length = 50)
+    private String color;
+
+    @Column(nullable = false, length = 50)
+    private String numero_serie;
+
+    @Column(nullable = false)
+    private Boolean transmision;
+
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cotizacion> cotizaciones;
+
+    @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Historial> historial;
+
+    @OneToOne(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Condicion_auto condicion_auto;
 }

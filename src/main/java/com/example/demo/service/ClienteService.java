@@ -24,7 +24,7 @@ public class ClienteService {
     public ClienteDTO createUser(ClienteDTO dto){
         Cliente cliente = Cliente.builder()
                 .nombre(AESUtil.encrypt(dto.getName()))
-                .email(AESUtil.encrypt(dto.getEmail()))
+                .correo(AESUtil.encrypt(dto.getEmail()))
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .telefono(AESUtil.encrypt(dto.getTelefono()))
                 .build();
@@ -61,7 +61,7 @@ public class ClienteService {
             // ❌ Cliente no existe → crear cliente con auto
             cliente = Cliente.builder()
                     .nombre(AESUtil.encrypt(dto.getName()))
-                    .email(AESUtil.encrypt(dto.getEmail()))
+                    .correo(AESUtil.encrypt(dto.getEmail()))
                     .password(passwordEncoder.encode(dto.getPassword()))
                     .telefono(AESUtil.encrypt(dto.getTelefono()))
                     .build();
@@ -95,7 +95,7 @@ public class ClienteService {
 
         return ClienteConAutoDTO.builder()
                 .name(cliente.getNombre())
-                .email(cliente.getEmail())
+                .email(cliente.getCorreo())
                 .password(cliente.getPassword())
                 .telefono(cliente.getTelefono())
                 .autos(autosDTO)
@@ -145,7 +145,7 @@ public class ClienteService {
     private ClienteDTO toDTO(Cliente cliente) {
         return ClienteDTO.builder()
                 .name(cliente.getNombre())
-                .email(cliente.getEmail())
+                .email(cliente.getCorreo())
                 .password(cliente.getPassword())
                 .telefono(cliente.getTelefono())
                 .build();

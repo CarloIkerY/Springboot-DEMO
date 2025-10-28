@@ -19,9 +19,14 @@ public class Proveedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer proveedor_id;
 
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false)
     private String telefono;
-    private String email;
+
+    @Column(nullable = false)
+    private String correo;
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pieza> piezas;

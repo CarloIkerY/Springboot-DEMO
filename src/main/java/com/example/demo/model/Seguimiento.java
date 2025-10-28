@@ -27,6 +27,9 @@ public class Seguimiento {
     @JoinColumn(name = "mecanico_id", nullable = false)
     private Mecanico mecanico;
 
+    @Column(nullable = false)
     private String estado;
+
+    @Column(nullable = false)
     private LocalDate fecha_actualizacion;
 }

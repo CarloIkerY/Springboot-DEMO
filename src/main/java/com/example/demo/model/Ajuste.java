@@ -19,7 +19,10 @@ public class Ajuste {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ajuste_id;
 
+    @Column(nullable = false)
     private String descripcion;
+
+    @Column(nullable = false)
     private Double costo_estimado;
 
     @OneToMany(mappedBy = "ajuste", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -6,11 +6,9 @@ import com.example.demo.model.Usuario;
 import com.example.demo.repo.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.Encoder;
 import java.util.Optional;
 
 @RestController
@@ -23,7 +21,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario loginRequest) {
-        String encryptedEmail = AESUtil.encrypt(loginRequest.getEmail());
+        String encryptedEmail = AESUtil.encrypt(loginRequest.getCorreo());
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(
                 encryptedEmail
         );

@@ -25,5 +25,6 @@ public class PiezaAjuste {
     @JoinColumn(name = "pieza_id", nullable = false)
     private Pieza pieza;
 
+    @Column(nullable = false)
     private Integer cantidad;
 }

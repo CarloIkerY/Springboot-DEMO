@@ -19,14 +19,16 @@ public class Mecanico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer mecanico_id;
 
-    private String nombre;
-    private String especialidad;
-
-    @OneToMany(mappedBy = "mecanico", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Seguimiento> seguimiento;
-
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String especialidad;
+
+    @OneToMany(mappedBy = "mecanico", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seguimiento> seguimiento;
 }

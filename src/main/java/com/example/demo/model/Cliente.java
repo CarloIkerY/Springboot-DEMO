@@ -25,16 +25,15 @@ public class Cliente {
     @Column(nullable = false, length = 50)
     private String telefono;
 
-    @Column(nullable = false, length = 100)
-    private String email;
+    @Column(nullable = false, length = 50)
+    private String celular;
 
     @Column(nullable = false, length = 100)
-    private String password;
+    private String correo;
+
+    @Column(nullable = false, length = 100)
+    private String direccion;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Auto> autos = new ArrayList<>(); //Lo hacemos para inicializar la lista
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id") // quien lo creó
-    private Usuario creadoPor;
+    private List<Auto> autos = new ArrayList<>();
 }
