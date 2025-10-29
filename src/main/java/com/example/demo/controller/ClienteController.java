@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.config.ApiResponse;
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
 import com.example.demo.service.ClienteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,35 +19,69 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<?> registrarClienteConAuto(@RequestBody ClienteConAutoDTO dto) {
+    public ResponseEntity<ApiResponse<ClienteConAutoDTO>> registrarClienteConAuto(@RequestBody ClienteConAutoDTO dto) {
 
-        // Validación manual
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("El nombre es obligatorio.");
+        if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.<ClienteConAutoDTO>builder()
+                            .statusCode(400)
+                            .message("El nombre es obligatorio.")
+                            .data(null)
+                            .build()
+            );
         }
 
-        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("El email es obligatorio.");
+        if (dto.getCelular() == null || dto.getCelular().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.<ClienteConAutoDTO>builder()
+                            .statusCode(400)
+                            .message("El celular es obligatorio.")
+                            .data(null)
+                            .build()
+            );
         }
 
-        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Seleccione una contraseña");
+        if (dto.getDireccion() == null || dto.getDireccion().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.<ClienteConAutoDTO>builder()
+                            .statusCode(400)
+                            .message("La dirección es obligatoria.")
+                            .data(null)
+                            .build()
+            );
         }
 
-        // ✅ Validación de la lista de autos
         if (dto.getAutos() == null || dto.getAutos().isEmpty()) {
-            return ResponseEntity.badRequest().body("Debe incluir al menos un auto.");
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.<ClienteConAutoDTO>builder()
+                            .statusCode(400)
+                            .message("Debe incluir al menos un auto.")
+                            .data(null)
+                            .build()
+            );
         }
 
-        AutoDTO auto = dto.getAutos().get(0); // tomamos el primero por ahora
-
+        AutoDTO auto = dto.getAutos().get(0);
         if (auto.getMarca() == null || auto.getMarca().trim().isEmpty() ||
                 auto.getModelo() == null || auto.getModelo().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Los datos del auto son obligatorios.");
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.<ClienteConAutoDTO>builder()
+                            .statusCode(400)
+                            .message("Los datos del auto son obligatorios.")
+                            .data(null)
+                            .build()
+            );
         }
 
         ClienteConAutoDTO clienteCreado = clienteService.createClienteConAuto(dto);
-        return ResponseEntity.ok(clienteCreado);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.<ClienteConAutoDTO>builder()
+                        .statusCode(201)
+                        .message("Cliente registrado correctamente.")
+                        .data(clienteCreado)
+                        .build()
+        );
     }
 
     @GetMapping("/buscar/placa")
@@ -69,12 +105,12 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar/email")
-    public ResponseEntity<?> buscarClientesPorEmail(@RequestParam String email) {
-        if(email == null || email.trim().isEmpty()){
+    public ResponseEntity<?> buscarClientesPorEmail(@RequestParam String correo) {
+        if(correo == null || correo.trim().isEmpty()){
             return ResponseEntity.badRequest().body("El email es obligatorio.");
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByEmail(email);
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByCorreo(correo);
         return ResponseEntity.ok(clientes);
     }
 

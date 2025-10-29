@@ -38,11 +38,14 @@ public class Auto {
     @Column(nullable = false, length = 50)
     private String color;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String numero_serie;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean transmision;
+
+    @Column(nullable = true, length = 10)
+    private Integer kilometraje;
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cotizacion> cotizaciones;

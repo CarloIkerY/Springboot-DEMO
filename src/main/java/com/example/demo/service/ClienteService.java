@@ -21,12 +21,11 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ClienteDTO createUser(ClienteDTO dto){
+    public ClienteDTO createCliente(ClienteDTO dto){
         Cliente cliente = Cliente.builder()
-                .nombre(AESUtil.encrypt(dto.getName()))
-                .correo(AESUtil.encrypt(dto.getEmail()))
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .telefono(AESUtil.encrypt(dto.getTelefono()))
+                .nombre(AESUtil.encrypt(dto.getNombre()))
+                .celular(AESUtil.encrypt(dto.getCelular()))
+                .direccion(AESUtil.encrypt(dto.getDireccion()))
                 .build();
 
         cliente = clienteRepository.save(cliente);
@@ -36,10 +35,11 @@ public class ClienteService {
 
     public ClienteConAutoDTO createClienteConAuto(ClienteConAutoDTO dto) {
         // Buscar si ya existe el cliente
-        Optional<Cliente> clienteExistenteOpt = clienteRepository.findByNombreAndEmailAndTelefono(
-                dto.getName(), dto.getEmail(), dto.getTelefono());
+        Optional<Cliente> clienteExistenteOpt = clienteRepository.findByNombreAndCorreoAndTelefono(
+                dto.getNombre(), dto.getCorreo(), dto.getTelefono());
 
         Cliente cliente;
+        boolean clienteExistente;
 
         // Tomar el primer auto (como ya haces)
         AutoDTO autoDTO = dto.getAutos().get(0);
@@ -53,17 +53,17 @@ public class ClienteService {
                     .modelo(autoDTO.getModelo())
                     .anio(autoDTO.getAnio())
                     .placa(AESUtil.encrypt(autoDTO.getPlaca()))
+                    .color(autoDTO.getColor())
                     .cliente(cliente)
                     .build();
 
             cliente.getAutos().add(nuevoAuto);
         } else {
-            // ❌ Cliente no existe → crear cliente con auto
+            // Cliente no existe → crear cliente con auto
             cliente = Cliente.builder()
-                    .nombre(AESUtil.encrypt(dto.getName()))
-                    .correo(AESUtil.encrypt(dto.getEmail()))
-                    .password(passwordEncoder.encode(dto.getPassword()))
-                    .telefono(AESUtil.encrypt(dto.getTelefono()))
+                    .nombre(AESUtil.encrypt(dto.getNombre()))
+                    .celular(AESUtil.encrypt(dto.getCelular()))
+                    .direccion(AESUtil.encrypt(dto.getDireccion()))
                     .build();
 
             Auto auto = Auto.builder()
@@ -71,6 +71,7 @@ public class ClienteService {
                     .modelo(autoDTO.getModelo())
                     .anio(autoDTO.getAnio())
                     .placa(AESUtil.encrypt(autoDTO.getPlaca()))
+                    .color(autoDTO.getColor())
                     .cliente(cliente)
                     .build();
 
@@ -89,15 +90,15 @@ public class ClienteService {
                         .marca(auto.getMarca())
                         .modelo(auto.getModelo())
                         .anio(auto.getAnio())
-                        .placa(AESUtil.encrypt(auto.getPlaca()))
+                        .placa(AESUtil.decrypt(auto.getPlaca()))
+                        .color(auto.getColor())
                         .build()
         ).toList();
 
         return ClienteConAutoDTO.builder()
-                .name(cliente.getNombre())
-                .email(cliente.getCorreo())
-                .password(cliente.getPassword())
-                .telefono(cliente.getTelefono())
+                .nombre(AESUtil.decrypt(cliente.getNombre()))
+                .celular(AESUtil.decrypt(cliente.getCelular()))
+                .direccion(AESUtil.decrypt(cliente.getDireccion()))
                 .autos(autosDTO)
                 .build();
     }
@@ -126,8 +127,8 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
-    public List<ClienteConAutoDTO> findClientesByEmail(String email) {
-        List<Cliente> clientes = clienteRepository.findByEmail(email);
+    public List<ClienteConAutoDTO> findClientesByCorreo(String correo) {
+        List<Cliente> clientes = clienteRepository.findByCorreo(correo);
 
         return clientes.stream()
                 .map(this::toClienteConAutosRespuestaDTO)
@@ -144,10 +145,9 @@ public class ClienteService {
 
     private ClienteDTO toDTO(Cliente cliente) {
         return ClienteDTO.builder()
-                .name(cliente.getNombre())
-                .email(cliente.getCorreo())
-                .password(cliente.getPassword())
-                .telefono(cliente.getTelefono())
+                .nombre(cliente.getNombre())
+                .celular(cliente.getCelular())
+                .direccion(cliente.getDireccion())
                 .build();
     }
 }

@@ -12,9 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ClienteConAutoDTO {
-    private String name;
-    private String email;
-    private String password;
+    private String nombre;
     private String telefono;
+    private String celular;
+    private String correo;
+    private String direccion;
     private List<AutoDTO> autos;
 }

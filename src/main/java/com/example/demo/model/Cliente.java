@@ -22,13 +22,13 @@ public class Cliente {
     @Column(nullable = false, length = 50)
     private String nombre;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String telefono;
 
     @Column(nullable = false, length = 50)
     private String celular;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String correo;
 
     @Column(nullable = false, length = 100)

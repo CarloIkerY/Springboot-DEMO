@@ -14,4 +14,8 @@ public class AutoDTO {
     private String modelo;
     private Integer anio;
     private String placa;
+    private String color;
+    private String numero_serie;
+    private Boolean transmision;
+    private Integer kilometraje;
 }

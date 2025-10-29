@@ -22,7 +22,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario loginRequest) {
         String encryptedEmail = AESUtil.encrypt(loginRequest.getCorreo());
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(
                 encryptedEmail
         );
 

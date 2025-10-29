@@ -22,5 +22,5 @@ public class Rol {
     private String nombre;
 
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cliente> clientes = new ArrayList<>();
+    private List<Usuario> usuarios = new ArrayList<>();
 }

@@ -20,7 +20,7 @@ public class Historial {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long historial_id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "auto_id", nullable = false)
     private Auto auto;
 
