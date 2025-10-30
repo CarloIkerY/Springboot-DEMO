@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/clientes")
@@ -19,108 +21,80 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<ApiResponse<ClienteConAutoDTO>> registrarClienteConAuto(@RequestBody ClienteConAutoDTO dto) {
+    public ResponseEntity<Map<String, Object>> registrarClienteConAuto(@RequestBody ClienteConAutoDTO dto) {
+        Map<String, Object> response = new HashMap<>();
 
         if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.<ClienteConAutoDTO>builder()
-                            .statusCode(400)
-                            .message("El nombre es obligatorio.")
-                            .data(null)
-                            .build()
-            );
+            response.put("data", Map.of("error", "El nombre es obligatorio."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         if (dto.getCelular() == null || dto.getCelular().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.<ClienteConAutoDTO>builder()
-                            .statusCode(400)
-                            .message("El celular es obligatorio.")
-                            .data(null)
-                            .build()
-            );
+            response.put("data", Map.of("error", "El celular es obligatorio."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         if (dto.getDireccion() == null || dto.getDireccion().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.<ClienteConAutoDTO>builder()
-                            .statusCode(400)
-                            .message("La dirección es obligatoria.")
-                            .data(null)
-                            .build()
-            );
+            response.put("data", Map.of("error", "La dirección es obligatoria."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         if (dto.getAutos() == null || dto.getAutos().isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.<ClienteConAutoDTO>builder()
-                            .statusCode(400)
-                            .message("Debe incluir al menos un auto.")
-                            .data(null)
-                            .build()
-            );
+            response.put("data", Map.of("error", "Debe incluir al menos un auto."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         AutoDTO auto = dto.getAutos().get(0);
         if (auto.getMarca() == null || auto.getMarca().trim().isEmpty() ||
                 auto.getModelo() == null || auto.getModelo().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.<ClienteConAutoDTO>builder()
-                            .statusCode(400)
-                            .message("Los datos del auto son obligatorios.")
-                            .data(null)
-                            .build()
-            );
+            response.put("data", Map.of("error", "Los datos del auto son obligatorios."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         ClienteConAutoDTO clienteCreado = clienteService.createClienteConAuto(dto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.<ClienteConAutoDTO>builder()
-                        .statusCode(201)
-                        .message("Cliente registrado correctamente.")
-                        .data(clienteCreado)
-                        .build()
-        );
+        response.put("data", clienteCreado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/buscar/placa")
     public ResponseEntity<?> buscarClientesPorPlaca(@RequestParam String placa) {
+        Map<String, Object> response = new HashMap<>();
+
         if (placa == null || placa.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("La placa no puede estar vacía.");
+            response.put("data", Map.of("error", "El placa es obligatorio."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         List<ClienteConAutoDTO> clientes = clienteService.findClientesByPlaca(placa);
-        return ResponseEntity.ok(clientes);
+        response.put("data", clientes);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/buscar/nombre")
     public ResponseEntity<?> buscarClientesPorNombre(@RequestParam String nombre) {
+        Map<String, Object> response = new HashMap<>();
+
         if(nombre == null || nombre.trim().isEmpty()){
-            return ResponseEntity.badRequest().body("El nombre es obligatorio.");
+            response.put("data", Map.of("error", "El Nombre es obligatorio."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         List<ClienteConAutoDTO> clientes = clienteService.findClientesByNombre(nombre);
-        return ResponseEntity.ok(clientes);
+        response.put("data", clientes);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/buscar/email")
-    public ResponseEntity<?> buscarClientesPorEmail(@RequestParam String correo) {
-        if(correo == null || correo.trim().isEmpty()){
-            return ResponseEntity.badRequest().body("El email es obligatorio.");
+    @GetMapping("/buscar/celular")
+    public ResponseEntity<?> buscarClientesPorCelular(@RequestParam String celular) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (celular == null || celular.trim().isEmpty()) {
+            response.put("data", Map.of("error", "El Celular es obligatorio."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByCorreo(correo);
-        return ResponseEntity.ok(clientes);
-    }
-
-    @GetMapping("/buscar/telefono")
-    public ResponseEntity<?> buscarClientesPorTelefono(@RequestParam String telefono) {
-        if (telefono == null || telefono.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("El número de teléfono no puede estar vacío.");
-        }
-
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByTelefono(telefono);
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByCelular(celular);
+        response.put("data", clientes);
         return ResponseEntity.ok(clientes);
     }
 }

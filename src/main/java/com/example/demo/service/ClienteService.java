@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,50 +36,62 @@ public class ClienteService {
 
     public ClienteConAutoDTO createClienteConAuto(ClienteConAutoDTO dto) {
         // Buscar si ya existe el cliente
-        Optional<Cliente> clienteExistenteOpt = clienteRepository.findByNombreAndCorreoAndTelefono(
-                dto.getNombre(), dto.getCorreo(), dto.getTelefono());
+        Cliente cliente = null;
 
-        Cliente cliente;
-        boolean clienteExistente;
-
-        // Tomar el primer auto (como ya haces)
-        AutoDTO autoDTO = dto.getAutos().get(0);
+        // Revisar si existe el cliente con alguno de los autos
+        Optional<Cliente> clienteExistenteOpt = clienteRepository.findByNombreAndCelular(
+                AESUtil.encrypt(dto.getNombre()),
+                AESUtil.encrypt(dto.getCelular())
+        );
 
         if (clienteExistenteOpt.isPresent()) {
-            // ✅ Cliente ya existe → agregar nuevo auto
             cliente = clienteExistenteOpt.get();
+        }
 
-            Auto nuevoAuto = Auto.builder()
-                    .marca(autoDTO.getMarca())
-                    .modelo(autoDTO.getModelo())
-                    .anio(autoDTO.getAnio())
-                    .placa(AESUtil.encrypt(autoDTO.getPlaca()))
-                    .color(autoDTO.getColor())
-                    .cliente(cliente)
-                    .build();
+        if (cliente != null) {
+            for (AutoDTO autoDTO : dto.getAutos()) {
+                boolean yaRegistrado = cliente.getAutos().stream()
+                        .anyMatch(a -> AESUtil.decrypt(a.getPlaca()).equals(autoDTO.getPlaca()));
 
-            cliente.getAutos().add(nuevoAuto);
+                if (!yaRegistrado) {
+                    Auto nuevoAuto = Auto.builder()
+                            .marca(autoDTO.getMarca())
+                            .modelo(autoDTO.getModelo())
+                            .anio(autoDTO.getAnio())
+                            .placa(AESUtil.encrypt(autoDTO.getPlaca()))
+                            .color(autoDTO.getColor())
+                            .cliente(cliente)
+                            .build();
+
+                    cliente.getAutos().add(nuevoAuto);
+                }
+            }
         } else {
-            // Cliente no existe → crear cliente con auto
+            // Cliente nuevo → crear con todos sus autos
             cliente = Cliente.builder()
                     .nombre(AESUtil.encrypt(dto.getNombre()))
                     .celular(AESUtil.encrypt(dto.getCelular()))
                     .direccion(AESUtil.encrypt(dto.getDireccion()))
                     .build();
 
-            Auto auto = Auto.builder()
-                    .marca(autoDTO.getMarca())
-                    .modelo(autoDTO.getModelo())
-                    .anio(autoDTO.getAnio())
-                    .placa(AESUtil.encrypt(autoDTO.getPlaca()))
-                    .color(autoDTO.getColor())
-                    .cliente(cliente)
-                    .build();
+            List<Auto> autos = new ArrayList<>();
+            for (AutoDTO autoDTO : dto.getAutos()) {
+                Auto auto = Auto.builder()
+                        .marca(autoDTO.getMarca())
+                        .modelo(autoDTO.getModelo())
+                        .anio(autoDTO.getAnio())
+                        .placa(AESUtil.encrypt(autoDTO.getPlaca()))
+                        .color(autoDTO.getColor())
+                        .cliente(cliente)
+                        .build();
 
-            cliente.setAutos(List.of(auto));
+                autos.add(auto);
+            }
+
+            cliente.setAutos(autos);
         }
 
-        // Guardar (actualiza o crea)
+        // Guardar cliente
         cliente = clienteRepository.save(cliente);
 
         return toClienteConAutosRespuestaDTO(cliente);
@@ -112,7 +125,7 @@ public class ClienteService {
     }
 
     public List<ClienteConAutoDTO> findClientesByPlaca(String placa) {
-        List<Cliente> clientes = clienteRepository.findByPlacaAuto(placa);
+        List<Cliente> clientes = clienteRepository.findByPlacaAuto(AESUtil.encrypt(placa));
 
         return clientes.stream()
                 .map(this::toClienteConAutosRespuestaDTO)
@@ -120,23 +133,15 @@ public class ClienteService {
     }
 
     public List<ClienteConAutoDTO> findClientesByNombre(String nombre) {
-        List<Cliente> clientes = clienteRepository.findByNombre(nombre);
+        List<Cliente> clientes = clienteRepository.findByNombre(AESUtil.encrypt(nombre));
 
         return clientes.stream()
                 .map(this::toClienteConAutosRespuestaDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<ClienteConAutoDTO> findClientesByCorreo(String correo) {
-        List<Cliente> clientes = clienteRepository.findByCorreo(correo);
-
-        return clientes.stream()
-                .map(this::toClienteConAutosRespuestaDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<ClienteConAutoDTO> findClientesByTelefono(String telefono) {
-        List<Cliente> clientes = clienteRepository.findByTelefono(telefono);
+    public List<ClienteConAutoDTO> findClientesByCelular(String celular) {
+        List<Cliente> clientes = clienteRepository.findByCelular(AESUtil.encrypt(celular));
 
         return clientes.stream()
                 .map(this::toClienteConAutosRespuestaDTO)

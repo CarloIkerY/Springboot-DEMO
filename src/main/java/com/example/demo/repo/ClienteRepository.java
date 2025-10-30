@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-    Optional<Cliente> findByNombreAndCorreoAndTelefono(String nombre, String correo, String telefono);
+    Optional<Cliente> findByNombreAndCelular(String nombre, String celular);
 
     @Query("SELECT c FROM Cliente c JOIN c.autos a WHERE a.placa = :placa")
     List<Cliente> findByPlacaAuto(String placa);
 
     List<Cliente> findByNombre(String nombre);
-    List<Cliente> findByCorreo(String correo);
-    List<Cliente> findByTelefono(String telefono);
+    List<Cliente> findByCelular(String celular);
 }
