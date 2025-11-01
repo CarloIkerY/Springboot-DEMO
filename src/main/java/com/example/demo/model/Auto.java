@@ -24,7 +24,7 @@ public class Auto {
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "chofer_id", nullable = false)
+    @JoinColumn(name = "chofer_id", nullable = true)
     private Chofer chofer;
 
     @Column(nullable = false, length = 15)

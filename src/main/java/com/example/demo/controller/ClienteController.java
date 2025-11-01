@@ -70,6 +70,20 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/buscar/modeloAuto")
+    public ResponseEntity<?> buscarClientesPorModeloAuto(@RequestParam String modelo) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (modelo == null || modelo.trim().isEmpty()) {
+            response.put("data", Map.of("error", "El modelo es obligatorio."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        List<ClienteConAutoDTO> clientes = clienteService.findClientesByModeloAuto(modelo);
+        response.put("data", clientes);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @GetMapping("/buscar/nombre")
     public ResponseEntity<?> buscarClientesPorNombre(@RequestParam String nombre) {
         Map<String, Object> response = new HashMap<>();
