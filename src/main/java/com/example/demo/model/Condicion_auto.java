@@ -49,6 +49,9 @@ public class Condicion_auto {
     private Boolean emblemas;
 
     @Column(nullable = false)
+    private Boolean llantas_buen_estado;
+
+    @Column(nullable = false)
     private Boolean tapones_ruedas;
 
     @Column(nullable = false)
@@ -136,6 +139,9 @@ public class Condicion_auto {
     private Boolean manijas_interiores;
 
     @Column(nullable = false)
+    private Boolean manijas_exteriores;
+
+    @Column(nullable = false)
     private Boolean pomo_palanca;
 
     @Column(nullable = false)
@@ -167,6 +173,9 @@ public class Condicion_auto {
 
     @Column(nullable = false)
     private Boolean bateria;
+
+    @Column(nullable = false)
+    private Boolean manuales;
 
     @Column(nullable = false, length = 200)
     private String otros;

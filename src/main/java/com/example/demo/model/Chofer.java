@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "Mecanico")
+@Table(name = "Chofer")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Mecanico {
+public class Chofer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer mecanico_id;
@@ -23,9 +23,6 @@ public class Mecanico {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @Column(nullable = false)
-    private String especialidad;
-
-    @OneToMany(mappedBy = "mecanico", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Seguimiento> seguimiento;
+    @OneToMany(mappedBy = "chofer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Auto> autos;
 }
