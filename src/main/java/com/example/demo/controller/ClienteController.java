@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.config.ApiResponse;
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
 import com.example.demo.service.ClienteService;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/clientes")
@@ -56,59 +56,33 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/buscar/placa")
-    public ResponseEntity<?> buscarClientesPorPlaca(@RequestParam String placa) {
+    @GetMapping("/buscarClientes")
+    public ResponseEntity<?> buscarClientesPorParametro(@RequestParam String parametro) {
         Map<String, Object> response = new HashMap<>();
 
-        if (placa == null || placa.trim().isEmpty()) {
-            response.put("data", Map.of("error", "El placa es obligatorio."));
+        if (parametro == null || parametro.trim().isEmpty()) {
+            response.put("data", List.of());
+            response.put("message", "El parámetro es obligatorio.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByPlaca(placa);
-        response.put("data", clientes);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+        // Buscar en cada criterio
+        List<ClienteConAutoDTO> clientesPlaca = clienteService.findClientesByPlaca(parametro);
+        List<ClienteConAutoDTO> clientesModeloAuto = clienteService.findClientesByModeloAuto(parametro);
+        List<ClienteConAutoDTO> clientesNombre = clienteService.findClientesByNombre(parametro);
+        List<ClienteConAutoDTO> clientesByCelular = clienteService.findClientesByCelular(parametro);
 
-    @GetMapping("/buscar/modeloAuto")
-    public ResponseEntity<?> buscarClientesPorModeloAuto(@RequestParam String modelo) {
-        Map<String, Object> response = new HashMap<>();
+        // Tomar la primera lista que no esté vacía
+        List<ClienteConAutoDTO> resultado = Stream.of(clientesPlaca, clientesModeloAuto, clientesNombre, clientesByCelular)
+                .filter(list -> !list.isEmpty())
+                .findFirst()
+                .orElse(List.of());
 
-        if (modelo == null || modelo.trim().isEmpty()) {
-            response.put("data", Map.of("error", "El modelo es obligatorio."));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        response.put("data", resultado);
+        if (resultado.isEmpty()) {
+            response.put("message", "No se encontraron resultados");
         }
 
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByModeloAuto(modelo);
-        response.put("data", clientes);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @GetMapping("/buscar/nombre")
-    public ResponseEntity<?> buscarClientesPorNombre(@RequestParam String nombre) {
-        Map<String, Object> response = new HashMap<>();
-
-        if(nombre == null || nombre.trim().isEmpty()){
-            response.put("data", Map.of("error", "El Nombre es obligatorio."));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByNombre(nombre);
-        response.put("data", clientes);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @GetMapping("/buscar/celular")
-    public ResponseEntity<?> buscarClientesPorCelular(@RequestParam String celular) {
-        Map<String, Object> response = new HashMap<>();
-
-        if (celular == null || celular.trim().isEmpty()) {
-            response.put("data", Map.of("error", "El Celular es obligatorio."));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
-        List<ClienteConAutoDTO> clientes = clienteService.findClientesByCelular(celular);
-        response.put("data", clientes);
-        return ResponseEntity.ok(clientes);
+        return ResponseEntity.ok(response);
     }
 }
