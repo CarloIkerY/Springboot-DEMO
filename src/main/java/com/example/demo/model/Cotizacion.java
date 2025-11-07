@@ -34,8 +34,8 @@ public class Cotizacion {
     private String estatus;
 
     @OneToMany(mappedBy = "cotizacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CotizacionDetalle> cotizacionesDetalle;
+    private List<Evidencia> evidencias;
 
     @OneToMany(mappedBy = "cotizacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Evidencia> evidencia;
+    private List<CotizacionDetalle> cotizacionesDetalle;
 }

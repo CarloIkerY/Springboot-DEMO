@@ -33,6 +33,9 @@ public class Historial {
     @Column(nullable = false, length = 200)
     private String observaciones;
 
+    @Column(nullable = false, length = 20)
+    private Integer kilometraje;
+
     @Column(nullable = false)
     private Boolean faros_luces;
 

@@ -35,8 +35,8 @@ public class Usuario {
     private String contrasena;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Mecanico> mecanicos = new ArrayList<>();
+    private List<Seguimiento> seguimientos = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Chofer> chofers = new ArrayList<>();
+    private List<Auto> autos = new ArrayList<>();
 }
