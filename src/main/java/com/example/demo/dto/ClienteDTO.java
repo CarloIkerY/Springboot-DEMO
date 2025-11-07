@@ -15,4 +15,5 @@ public class ClienteDTO {
     private String celular;
     private String correo;
     private String direccion;
+    private Boolean clienteUNAM;
 }

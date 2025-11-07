@@ -44,6 +44,11 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
+        if (dto.getClienteUNAM() == null) {
+            response.put("data", Map.of("error", "La bandera UNAM es obligatoria."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
         AutoDTO auto = dto.getAutos().get(0);
         if (auto.getMarca() == null || auto.getMarca().trim().isEmpty() ||
                 auto.getModelo() == null || auto.getModelo().trim().isEmpty()) {

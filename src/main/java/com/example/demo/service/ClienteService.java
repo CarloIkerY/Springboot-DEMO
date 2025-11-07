@@ -31,6 +31,7 @@ public class ClienteService {
                 .nombre(dto.getNombre())
                 .celular(dto.getCelular())
                 .direccion(dto.getDireccion())
+                .clienteUNAM(dto.getClienteUNAM())
                 .build();
 
         cliente = clienteRepository.save(cliente);
@@ -79,6 +80,7 @@ public class ClienteService {
                     .nombre(dto.getNombre())
                     .celular(dto.getCelular())
                     .direccion(dto.getDireccion())
+                    .clienteUNAM(dto.getClienteUNAM())
                     .build();
 
             List<Auto> autos = new ArrayList<>();
@@ -124,6 +126,7 @@ public class ClienteService {
                 .nombre(cliente.getNombre())
                 .celular(cliente.getCelular())
                 .direccion(cliente.getDireccion())
+                .clienteUNAM(cliente.getClienteUNAM())
                 .autos(autosDTO)
                 .build();
     }
@@ -179,6 +182,7 @@ public class ClienteService {
                 .nombre(cliente.getNombre())
                 .celular(cliente.getCelular())
                 .direccion(cliente.getDireccion())
+                .clienteUNAM(cliente.getClienteUNAM())
                 .build();
     }
 }

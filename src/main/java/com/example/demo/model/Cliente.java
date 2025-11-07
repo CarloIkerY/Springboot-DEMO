@@ -34,6 +34,9 @@ public class Cliente {
     @Column(nullable = false, length = 100)
     private String direccion;
 
+    @Column(nullable = false)
+    private Boolean clienteUNAM;
+
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Auto> autos = new ArrayList<>();
 }
