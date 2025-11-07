@@ -23,7 +23,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         // Allow React (localhost:3000) to access the backend
-                        .allowedOriginPatterns("http://localhost:3000")
+                        .allowedOriginPatterns("http://localhost:5173")
                         // HTTP methods allowed
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         // Allow any headers in the request
