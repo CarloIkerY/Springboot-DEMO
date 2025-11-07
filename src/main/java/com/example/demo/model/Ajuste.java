@@ -26,8 +26,11 @@ public class Ajuste {
     private Double costo_estimado;
 
     @OneToMany(mappedBy = "ajuste", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PiezaAjuste> piezaAjuste;
+    private List<CotizacionDetalle> cotizacionDetalle;
 
     @OneToMany(mappedBy = "ajuste", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CotizacionDetalle> cotizacionDetalle;
+    private List<Seguimiento> seguimientos;
+
+    @OneToMany(mappedBy = "ajuste", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PiezaAjuste> piezaAjuste;
 }

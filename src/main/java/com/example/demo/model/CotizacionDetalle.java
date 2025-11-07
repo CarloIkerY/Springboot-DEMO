@@ -17,7 +17,7 @@ import java.util.List;
 public class CotizacionDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer detalle_id;
+    private Long detalle_id;
 
     @ManyToOne
     @JoinColumn(name = "cotizacion_id", nullable = false)
@@ -35,7 +35,4 @@ public class CotizacionDetalle {
 
     @Column(nullable = false)
     private Boolean enviado_por_mecanico;
-
-    @OneToMany(mappedBy = "cotizacionDetalle", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Seguimiento> seguimiento;
 }

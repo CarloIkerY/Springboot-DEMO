@@ -17,15 +17,15 @@ import java.util.List;
 public class Auto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer auto_id;
+    private Long auto_id;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "chofer_id", nullable = true)
-    private Chofer chofer;
+    @JoinColumn(name = "usuario_id", nullable = true)
+    private Usuario usuario;
 
     @Column(nullable = false, length = 15)
     private String marca;
@@ -48,15 +48,15 @@ public class Auto {
     @Column(nullable = true)
     private Boolean transmision;
 
-    @Column(nullable = true, length = 10)
-    private Integer kilometraje;
+    @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seguimiento> seguimientos;
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cotizacion> cotizaciones;
 
-    @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Historial> historial;
-
     @OneToOne(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
     private Condicion_auto condicion_auto;
+
+    @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Historial> historial;
 }

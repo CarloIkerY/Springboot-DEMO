@@ -30,5 +30,5 @@ public class Pieza {
     private Double costo_unitario;
 
     @OneToMany(mappedBy = "pieza", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PiezaAjuste> piezaAjuste;
+    private List<PiezaAjuste> piezasAjuste;
 }
