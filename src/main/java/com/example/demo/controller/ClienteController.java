@@ -74,11 +74,13 @@ public class ClienteController {
         // Buscar en cada criterio
         List<ClienteConAutoDTO> clientesPlaca = clienteService.findClientesByPlaca(parametro);
         List<ClienteConAutoDTO> clientesModeloAuto = clienteService.findClientesByModeloAuto(parametro);
+        List<ClienteConAutoDTO> clientesColorAuto = clienteService.findClientesByColorAuto(parametro);
         List<ClienteConAutoDTO> clientesNombre = clienteService.findClientesByNombre(parametro);
         List<ClienteConAutoDTO> clientesByCelular = clienteService.findClientesByCelular(parametro);
+        List<ClienteConAutoDTO> clientesByDireccion = clienteService.findClientesByDireccion(parametro);
 
         // Tomar la primera lista que no esté vacía
-        List<ClienteConAutoDTO> resultado = Stream.of(clientesPlaca, clientesModeloAuto, clientesNombre, clientesByCelular)
+        List<ClienteConAutoDTO> resultado = Stream.of(clientesPlaca, clientesModeloAuto, clientesColorAuto, clientesNombre, clientesByCelular, clientesByDireccion)
                 .filter(list -> !list.isEmpty())
                 .findFirst()
                 .orElse(List.of());

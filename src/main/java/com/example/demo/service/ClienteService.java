@@ -157,6 +157,14 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
+    public List<ClienteConAutoDTO> findClientesByColorAuto(String color) {
+        List<Cliente> clientes = clienteRepository.findByColorAuto(color);
+
+        return clientes.stream()
+                .map(this::toClienteConAutosRespuestaDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<ClienteConAutoDTO> findClientesByNombre(String nombre) {
         // String nombreDesencriptado = AESUtil.decrypt(nombre);
 
@@ -171,6 +179,16 @@ public class ClienteService {
         // String celularDesencriptado = AESUtil.decrypt(celular);
 
         List<Cliente> clientes = clienteRepository.findByCelular(celular);
+
+        return clientes.stream()
+                .map(this::toClienteConAutosRespuestaDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ClienteConAutoDTO> findClientesByDireccion(String direccion) {
+        // String celularDesencriptado = AESUtil.decrypt(celular);
+
+        List<Cliente> clientes = clienteRepository.findByDireccion(direccion);
 
         return clientes.stream()
                 .map(this::toClienteConAutosRespuestaDTO)
