@@ -21,9 +21,14 @@ public class DataInitializer {
         if (rolRepository.count() == 0) {
             Rol admin = Rol.builder().nombre("ADMIN").build();
             Rol mecanico = Rol.builder().nombre("MECANICO").build();
+            Rol chofer = Rol.builder().nombre("CHOFER").build();
+            Rol gerente = Rol.builder().nombre("GERENTE").build();
+
 
             rolRepository.save(admin);
             rolRepository.save(mecanico);
+            rolRepository.save(chofer);
+            rolRepository.save(gerente);
 
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -42,6 +47,22 @@ public class DataInitializer {
                     .correo(AESUtil.encrypt("mecanico@demo.com"))
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre(AESUtil.encrypt("Juan"))
+                    .apellido(AESUtil.encrypt("Perez"))
+                    .correo(AESUtil.encrypt("perez@demo.com"))
+                    .contrasena(encoder.encode("chofer123"))
+                    .rol(chofer)
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre(AESUtil.encrypt("Emilio"))
+                    .apellido(AESUtil.encrypt("Garcia"))
+                    .correo(AESUtil.encrypt("emilio@demo.com"))
+                    .contrasena(encoder.encode("amilio123"))
+                    .rol(gerente)
                     .build());
         }
 
