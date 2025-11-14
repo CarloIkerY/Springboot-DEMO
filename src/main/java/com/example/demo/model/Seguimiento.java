@@ -31,8 +31,9 @@ public class Seguimiento {
     @JoinColumn(name = "auto_id", nullable = false)
     private Auto auto;
 
-    @Column(nullable = false)
-    private String estado;
+    @ManyToOne
+    @JoinColumn(name = "auto_id", nullable = false)
+    private Estado estado;
 
     @Column(nullable = false)
     private LocalDate fecha_actualizacion;
