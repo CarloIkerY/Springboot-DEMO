@@ -20,7 +20,7 @@ public class Condicion_auto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long condicion_auto_id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "auto_id", nullable = false)
     private Auto auto;
 
@@ -182,4 +182,7 @@ public class Condicion_auto {
 
     @Column(nullable = false, length = 200)
     private String otros;
+
+    @Column(nullable = false)
+    private Boolean estado_actual;
 }

@@ -54,9 +54,6 @@ public class Auto {
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cotizacion> cotizaciones;
 
-    @OneToOne(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Condicion_auto condicion_auto;
-
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Historial> historial;
+    private List<Condicion_auto> condicion_auto;
 }
