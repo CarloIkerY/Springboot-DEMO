@@ -32,7 +32,7 @@ public class Seguimiento {
     private Auto auto;
 
     @ManyToOne
-    @JoinColumn(name = "auto_id", nullable = false)
+    @JoinColumn(name = "estado_id", nullable = false)
     private Estado estado;
 
     @Column(nullable = false)

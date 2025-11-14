@@ -16,6 +16,7 @@ public class DataInitializer {
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final ClienteRepository clienteRepository;
+    private final EstadoRepository estadoRepository;
     @PostConstruct
     public void init() {
         if (rolRepository.count() == 0) {
@@ -466,6 +467,46 @@ public class DataInitializer {
 
 
         }
+        if (estadoRepository.count() == 0) {
+            estadoRepository.save(Estado.builder()
+                    .estado("En transito")
+                    .build());
 
+            estadoRepository.save(Estado.builder()
+                    .estado("En taller - pendiente revisión")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Diagnostico enviado")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente cotización")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente aprobación")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente recolección")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("En reparación")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente VoBo")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("En entrega")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Finalizado")
+                    .build());
+        }
     }
 }
