@@ -49,7 +49,7 @@ public class Auto {
     private Boolean transmision;
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Seguimiento> seguimientos;
+    private List<Orden> ordenes;
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cotizacion> cotizaciones;

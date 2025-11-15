@@ -20,16 +20,12 @@ public class Seguimiento {
     private Integer seguimiento_id;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "orden_id", nullable = false)
+    private Orden orden;
 
     @ManyToOne
     @JoinColumn(name = "ajuste_id", nullable = false)
     private Ajuste ajuste;
-
-    @ManyToOne
-    @JoinColumn(name = "auto_id", nullable = false)
-    private Auto auto;
 
     @ManyToOne
     @JoinColumn(name = "estado_id", nullable = false)
