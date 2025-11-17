@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +54,9 @@ public class OrdenService {
 
     private String generarNumeroOrden() {
         return "ORD-" + System.currentTimeMillis();
+    }
+
+    public List<Orden> getOrdenesPorEstados(List<Long> ids) {
+        return ordenRepository.findOrdenesPorEstadoActual(ids);
     }
 }

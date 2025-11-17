@@ -6,12 +6,11 @@ import com.example.demo.service.OrdenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -51,5 +50,21 @@ public class OrdenController {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<?> filtrarPorEstados(@RequestParam String estados) {
+
+        List<Long> lista = Arrays.stream(estados.split(","))
+                .map(String::trim)
+                .map(Long::valueOf)
+                .toList();
+
+        List<Orden> ordenes = ordenService.getOrdenesPorEstados(lista);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", ordenes);
+
+        return ResponseEntity.ok(response);
     }
 }
