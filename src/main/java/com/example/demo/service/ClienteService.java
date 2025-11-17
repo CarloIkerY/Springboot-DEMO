@@ -39,7 +39,7 @@ public class ClienteService {
         return toDTO(cliente);
     }
 
-    public ClienteConAutoDTO createClienteConAuto(ClienteConAutoDTO dto) {
+    public ClienteConAutoDTO  createClienteConAuto(ClienteConAutoDTO dto) {
         // Buscar si ya existe el cliente
         Cliente cliente = null;
 

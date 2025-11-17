@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,11 +33,13 @@ public class Orden {
     private Auto auto;
 
     @Column(nullable = false)
-    private LocalDate fecha_actualizacion;
+    private LocalDate fecha_creacion;
 
     @Column(nullable = false)
     private String numero_orden;
 
+    @Builder.Default
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Seguimiento> seguimientos = new ArrayList<>();
 }

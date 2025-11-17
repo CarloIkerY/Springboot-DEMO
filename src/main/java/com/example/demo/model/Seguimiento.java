@@ -1,5 +1,8 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,14 +24,16 @@ public class Seguimiento {
 
     @ManyToOne
     @JoinColumn(name = "orden_id", nullable = false)
+    @JsonBackReference
     private Orden orden;
 
     @ManyToOne
-    @JoinColumn(name = "ajuste_id", nullable = false)
+    @JoinColumn(name = "ajuste_id", nullable = true)
     private Ajuste ajuste;
 
     @ManyToOne
-    @JoinColumn(name = "estado_id", nullable = false)
+    @JoinColumn(name = "estado_id", nullable = true)
+    @JsonManagedReference(value="estado-seguimientos")
     private Estado estado;
 
     @Column(nullable = false)
