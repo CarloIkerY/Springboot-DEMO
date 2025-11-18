@@ -35,72 +35,16 @@ public class DataInitializer {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
             // --- Usuarios base ---
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Rafael")
-                    .apellido("Ortega")
-                    .correo("rortega@admin.com")
-                    .contrasena("rafael123")
-                    .rol(admin)
-                    .build());
 
             usuarioRepository.save(Usuario.builder()
-                    .nombre("Elena")
-                    .apellido("Morales")
-                    .correo("emorales@admin.com")
-                    .contrasena("elena123")
+                    .nombre(AESUtil.encrypt("admin"))
+                    .apellido(AESUtil.encrypt("admin"))
+                    .correo(AESUtil.encrypt("admin@demo.com"))
+                    .contrasena(encoder.encode("admin123"))
                     .rol(admin)
                     .disponible(false)
                     .build());
 
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Jorge")
-                    .apellido("Silva")
-                    .correo("jsilva@admin.com")
-                    .contrasena("jorge123")
-                    .rol(admin)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Carlos")
-                    .apellido("Mecánico")
-                    .correo("mecanico@demo.com")
-                    .contrasena("mecanico123")
-                    .rol(mecanico)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Luis")
-                    .apellido("Martínez")
-                    .correo("lmartinez@demo.com")
-                    .contrasena("luis123")
-                    .rol(mecanico)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Pedro")
-                    .apellido("Gómez")
-                    .correo("pgomez@demo.com")
-                    .contrasena("pedro123")
-                    .rol(mecanico)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Ana")
-                    .apellido("Reyes")
-                    .correo("areyes@demo.com")
-                    .contrasena("ana123")
-                    .rol(mecanico)
-                    .disponible(false)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Juan")
-                    .apellido("Perez")
-                    .correo("perez@demo.com")
-                    .contrasena("chofer123")
-                    .rol(chofer)
-                    .disponible(true)
-                    .build());
 
             usuarioRepository.save(Usuario.builder()
                     .nombre(AESUtil.encrypt("Pedro"))
@@ -109,6 +53,15 @@ public class DataInitializer {
                     .contrasena(encoder.encode("chofer123"))
                     .rol(chofer)
                     .disponible(false)
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre(AESUtil.encrypt("maxines"))
+                    .apellido(AESUtil.encrypt("Perez"))
+                    .correo(AESUtil.encrypt("maxi@demo.com"))
+                    .contrasena(encoder.encode("robotics123"))
+                    .rol(chofer)
+                    .disponible(true)
                     .build());
 
 
@@ -121,63 +74,15 @@ public class DataInitializer {
                     .disponible(false)
                     .build());
 
-
             usuarioRepository.save(Usuario.builder()
-                    .nombre("Luis")
-                    .apellido("Ramírez")
-                    .correo("lramirez@demo.com")
-                    .contrasena("luis123")
-                    .rol(chofer)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Carlos")
-                    .apellido("Hernández")
-                    .correo("chernandez@demo.com")
-                    .contrasena("carlos123")
-                    .rol(chofer)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Miguel")
-                    .apellido("Torres")
-                    .correo("mtorres@demo.com")
-                    .contrasena("miguel123")
-                    .rol(chofer)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Emilio")
-                    .apellido("Garcia")
-                    .correo("emilio@demo.com")
-                    .contrasena("amilio123")
-                    .rol(gerente)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Laura")
-                    .apellido("Sánchez")
-                    .correo("lsanchez@demo.com")
-                    .contrasena("laura123")
-                    .rol(gerente)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Andrés")
-                    .apellido("López")
-                    .correo("alopez@demo.com")
-                    .contrasena("andres123")
-                    .rol(gerente)
-                    .build());
-
-            usuarioRepository.save(Usuario.builder()
-                    .nombre("Verónica")
-                    .apellido("Castro")
-                    .correo("vcastro@demo.com")
-                    .contrasena("vero123")
-                    .rol(gerente)
+                    .nombre(AESUtil.encrypt("juan"))
+                    .apellido(AESUtil.encrypt("Perez"))
+                    .correo(AESUtil.encrypt("juanto@demo.com"))
+                    .contrasena(encoder.encode("mecanico123"))
+                    .rol(mecanico)
                     .disponible(false)
                     .build());
+
         }
 
 
