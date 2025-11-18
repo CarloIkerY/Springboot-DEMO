@@ -26,6 +26,7 @@ public class Orden {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonManagedReference
     private Usuario usuario;
 
     @ManyToOne

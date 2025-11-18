@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +22,7 @@ public class Usuario {
 
     @ManyToOne
     @JoinColumn(name = "rol_id")
+    @JsonManagedReference
     private Rol rol;
 
     @Column(nullable = false)
@@ -40,6 +43,7 @@ public class Usuario {
 
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Orden> ordenes;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -67,4 +67,32 @@ public class OrdenController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/asignar")
+    public ResponseEntity<?> asignar(@RequestBody OrdenDTO dto) {
+
+        if (dto.getOrden_id() == null) {
+            return ResponseEntity.badRequest().body("El ID de la orden es obligatorio.");
+        }
+
+        if (dto.getUsuario_id() == null) {
+            return ResponseEntity.badRequest().body("El ID del usuario es obligatorio.");
+        }
+
+        try {
+            Orden ordenActualizada = ordenService.asignarOrden(dto);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Orden asignada correctamente",
+                    "data", ordenActualizada
+            ));
+
+        } catch (RuntimeException ex) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of(
+                            "message", ex.getMessage()
+                    ));
+        }
+    }
 }

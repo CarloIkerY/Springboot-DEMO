@@ -446,6 +446,19 @@ public class DataInitializer {
 
         }
         if (estadoRepository.count() == 0) {
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Sin Asignacion")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Asignado a mecánico")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Asignado a chofer")
+                    .build());
+
             estadoRepository.save(Estado.builder()
                     .estado("En transito")
                     .build());
@@ -472,6 +485,10 @@ public class DataInitializer {
 
             estadoRepository.save(Estado.builder()
                     .estado("En reparación")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Finalización mecánico")
                     .build());
 
             estadoRepository.save(Estado.builder()

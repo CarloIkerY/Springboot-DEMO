@@ -1,14 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.OrdenDTO;
-import com.example.demo.model.Auto;
-import com.example.demo.model.Estado;
-import com.example.demo.model.Orden;
-import com.example.demo.model.Seguimiento;
-import com.example.demo.repo.AutoRepository;
-import com.example.demo.repo.EstadoRepository;
-import com.example.demo.repo.OrdenRepository;
-import com.example.demo.repo.SeguimientoRepository;
+import com.example.demo.model.*;
+import com.example.demo.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +17,7 @@ public class OrdenService {
     private final OrdenRepository ordenRepository;
     private final SeguimientoRepository seguimientoRepository;
     private final EstadoRepository estadoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public Orden crearOrden(OrdenDTO dto) {
 
@@ -58,5 +53,47 @@ public class OrdenService {
 
     public List<Orden> getOrdenesPorEstados(List<Long> ids) {
         return ordenRepository.findOrdenesPorEstadoActual(ids);
+    }
+
+    public Orden asignarOrden(OrdenDTO dto) {
+
+        Orden orden = ordenRepository.findById(dto.getOrden_id())
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        Seguimiento seguimientoHoy = orden.getSeguimientos().stream()
+                .filter(s -> s.getFecha_actualizacion().isEqual(LocalDate.now()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No existe un seguimiento para hoy"));
+
+        Estado estado = seguimientoHoy.getEstado();
+
+        if (estado == null || estado.getEstado_id() == null) {
+            throw new RuntimeException("El seguimiento no tiene un estado asignado.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(dto.getUsuario_id())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Estado estadoAsignado = null;
+
+        if (estado.getEstado_id() == 1) {
+
+            if (usuario.getRol().getRol_id() == 3) {
+                estadoAsignado = estadoRepository.findById(3L)
+                        .orElseThrow(() -> new RuntimeException("Estado 3 no encontrado"));
+            } else if (usuario.getRol().getRol_id() == 2) {
+                estadoAsignado = estadoRepository.findById(2L)
+                        .orElseThrow(() -> new RuntimeException("Estado 2 no encontrado"));
+            }
+
+            seguimientoHoy.setEstado(estadoAsignado);
+            orden.setUsuario(usuario);
+        }
+        // Si NO es 1 → usuario = null
+        else {
+            orden.setUsuario(null);
+        }
+
+        return ordenRepository.save(orden);
     }
 }
