@@ -40,7 +40,7 @@ public class DataInitializer {
                     .correo(AESUtil.encrypt("admin@admin.com"))
                     .contrasena(encoder.encode("admin123"))
                     .rol(admin)
-                    .disponible(true)
+                    .disponible(false)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
@@ -49,7 +49,7 @@ public class DataInitializer {
                     .correo(AESUtil.encrypt("mecanico@demo.com"))
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
-                    .disponible(true)
+                    .disponible(false)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
@@ -60,6 +60,26 @@ public class DataInitializer {
                     .rol(chofer)
                     .disponible(true)
                     .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre(AESUtil.encrypt("Pedro"))
+                    .apellido(AESUtil.encrypt("Perez"))
+                    .correo(AESUtil.encrypt("perez@demo.com"))
+                    .contrasena(encoder.encode("chofer123"))
+                    .rol(chofer)
+                    .disponible(false)
+                    .build());
+
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre(AESUtil.encrypt("Roberto"))
+                    .apellido(AESUtil.encrypt("Perez"))
+                    .correo(AESUtil.encrypt("roberto@demo.com"))
+                    .contrasena(encoder.encode("chofer123"))
+                    .rol(chofer)
+                    .disponible(false)
+                    .build());
+
 
             usuarioRepository.save(Usuario.builder()
                     .nombre(AESUtil.encrypt("Emilio"))
