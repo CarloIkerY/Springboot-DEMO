@@ -34,6 +34,11 @@ public class Usuario {
     @Column(nullable = false)
     private String contrasena;
 
+    @Column(nullable = false)
+    private Boolean disponible = true;
+
+
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Orden> ordenes;
 
