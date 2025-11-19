@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AutoDTO {
+    private Long auto_id;
     private String marca;
     private String modelo;
     private Integer anio;

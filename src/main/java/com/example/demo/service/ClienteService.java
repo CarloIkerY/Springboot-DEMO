@@ -109,6 +109,7 @@ public class ClienteService {
     private ClienteConAutoDTO toClienteConAutosRespuestaDTO(Cliente cliente) {
         List<AutoDTO> autosDTO = cliente.getAutos().stream().map(auto ->
                 AutoDTO.builder()
+                        .auto_id(auto.getAuto_id())
                         .marca(auto.getMarca())
                         .modelo(auto.getModelo())
                         .anio(auto.getAnio())
