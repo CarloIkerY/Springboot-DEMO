@@ -123,6 +123,7 @@ public class ClienteService {
         // String direccionDesencriptado = AESUtil.decrypt(cliente.getDireccion());
 
         return ClienteConAutoDTO.builder()
+                .cliente_id(cliente.getCliente_id())
                 .nombre(cliente.getNombre())
                 .celular(cliente.getCelular())
                 .direccion(cliente.getDireccion())

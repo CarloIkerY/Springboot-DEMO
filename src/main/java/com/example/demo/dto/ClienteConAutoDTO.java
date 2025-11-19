@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ClienteConAutoDTO {
+    private Long cliente_id;
     private String nombre;
     private String telefono;
     private String celular;
