@@ -45,6 +45,7 @@ public class OrdenController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
+            e.printStackTrace();
             response.put("data", null);
             response.put("message", "Falló la creación de la orden.");
 

@@ -76,23 +76,17 @@ public class OrdenService {
 
         Estado estadoAsignado = null;
 
-        if (estado.getEstado_id() == 1) {
-
-            if (usuario.getRol().getRol_id() == 3) {
-                estadoAsignado = estadoRepository.findById(3L)
-                        .orElseThrow(() -> new RuntimeException("Estado 3 no encontrado"));
-            } else if (usuario.getRol().getRol_id() == 2) {
-                estadoAsignado = estadoRepository.findById(2L)
-                        .orElseThrow(() -> new RuntimeException("Estado 2 no encontrado"));
-            }
-
-            seguimientoHoy.setEstado(estadoAsignado);
-            orden.setUsuario(usuario);
+        if (usuario.getRol().getRol_id() == 2) {
+            estadoAsignado = estadoRepository.findById(2L)
+                    .orElseThrow(() -> new RuntimeException("Estado 2 no encontrado"));
+        } else if (usuario.getRol().getRol_id() == 3) {
+            estadoAsignado = estadoRepository.findById(3L)
+                    .orElseThrow(() -> new RuntimeException("Estado 3 no encontrado"));
         }
-        // Si NO es 1 → usuario = null
-        else {
-            orden.setUsuario(null);
-        }
+
+        seguimientoHoy.setEstado(estadoAsignado);
+        orden.setUsuario(usuario);
+        orden.setFecha_asignacion(LocalDate.now());
 
         return ordenRepository.save(orden);
     }

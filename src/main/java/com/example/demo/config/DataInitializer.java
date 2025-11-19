@@ -69,8 +69,8 @@ public class DataInitializer {
                     .nombre(AESUtil.encrypt("Roberto"))
                     .apellido(AESUtil.encrypt("Perez"))
                     .correo(AESUtil.encrypt("roberto@demo.com"))
-                    .contrasena(encoder.encode("chofer123"))
-                    .rol(chofer)
+                    .contrasena(encoder.encode("mecanico123"))
+                    .rol(mecanico)
                     .disponible(false)
                     .build());
 

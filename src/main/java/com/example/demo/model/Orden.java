@@ -36,6 +36,9 @@ public class Orden {
     @Column(nullable = false)
     private LocalDate fecha_creacion;
 
+    @Column(nullable = true)
+    private LocalDate fecha_asignacion;
+
     @Column(nullable = false)
     private String numero_orden;
 
