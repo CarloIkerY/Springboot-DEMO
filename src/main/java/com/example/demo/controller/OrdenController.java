@@ -73,11 +73,15 @@ public class OrdenController {
     public ResponseEntity<?> asignar(@RequestBody OrdenDTO dto) {
 
         if (dto.getOrden_id() == null) {
-            return ResponseEntity.badRequest().body("El ID de la orden es obligatorio.");
+            return ResponseEntity.badRequest().body(
+                    Map.of("message", "El ID de la orden es obligatorio.")
+            );
         }
 
         if (dto.getUsuario_id() == null) {
-            return ResponseEntity.badRequest().body("El ID del usuario es obligatorio.");
+            return ResponseEntity.badRequest().body(
+                    Map.of("message", "El ID del usuario es obligatorio.")
+            );
         }
 
         try {

@@ -22,14 +22,14 @@ public class DataInitializer {
     public void init() {
         if (rolRepository.count() == 0) {
             Rol admin = Rol.builder().nombre("ADMIN").build();
-            Rol mecanico = Rol.builder().nombre("MECANICO").build();
             Rol chofer = Rol.builder().nombre("CHOFER").build();
+            Rol mecanico = Rol.builder().nombre("MECANICO").build();
             Rol gerente = Rol.builder().nombre("GERENTE").build();
 
 
             rolRepository.save(admin);
-            rolRepository.save(mecanico);
             rolRepository.save(chofer);
+            rolRepository.save(mecanico);
             rolRepository.save(gerente);
 
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -452,11 +452,11 @@ public class DataInitializer {
                     .build());
 
             estadoRepository.save(Estado.builder()
-                    .estado("Asignado a mecánico")
+                    .estado("Asignado a chofer")
                     .build());
 
             estadoRepository.save(Estado.builder()
-                    .estado("Asignado a chofer")
+                    .estado("Asignado a mecánico")
                     .build());
 
             estadoRepository.save(Estado.builder()

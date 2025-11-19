@@ -40,11 +40,9 @@ public class Usuario {
     @Column(nullable = false)
     private Boolean disponible = true;
 
-
-
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    private List<Orden> ordenes;
+    @JsonManagedReference(value = "usuario-asignaciones")
+    private List<OrdenUsuario> ordenUsuarios = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Auto> autos = new ArrayList<>();

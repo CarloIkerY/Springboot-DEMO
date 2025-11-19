@@ -25,19 +25,11 @@ public class Orden {
     private Long orden_id;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    @JsonManagedReference
-    private Usuario usuario;
-
-    @ManyToOne
     @JoinColumn(name = "auto_id")
     private Auto auto;
 
     @Column(nullable = false)
     private LocalDate fecha_creacion;
-
-    @Column(nullable = true)
-    private LocalDate fecha_asignacion;
 
     @Column(nullable = false)
     private String numero_orden;
@@ -46,4 +38,8 @@ public class Orden {
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Seguimiento> seguimientos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "orden-asignaciones")
+    private List<OrdenUsuario> ordenUsuarios = new ArrayList<>();
 }
