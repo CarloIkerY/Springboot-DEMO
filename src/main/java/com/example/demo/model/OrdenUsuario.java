@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class OrdenUsuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ordenusuario_id;
 
     @ManyToOne
     @JoinColumn(name = "orden_id", nullable = false)
@@ -29,7 +30,7 @@ public class OrdenUsuario {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonBackReference(value = "usuario-asignaciones")
+    @JsonIgnoreProperties({"ordenUsuarios"})
     private Usuario usuario;
 
     @Column(nullable = false)

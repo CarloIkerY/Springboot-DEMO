@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,6 @@ public class Orden {
     private List<Seguimiento> seguimientos = new ArrayList<>();
 
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "orden-asignaciones")
+    @JsonIgnoreProperties({"orden"})
     private List<OrdenUsuario> ordenUsuarios = new ArrayList<>();
 }
