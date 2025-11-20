@@ -37,9 +37,9 @@ public class DataInitializer {
             // --- Usuarios base ---
 
             usuarioRepository.save(Usuario.builder()
-                    .nombre(AESUtil.encrypt("admin"))
-                    .apellido(AESUtil.encrypt("admin"))
-                    .correo(AESUtil.encrypt("admin@demo.com"))
+                    .nombre("admin")
+                    .apellido("admin")
+                    .correo("admin@demo.com")
                     .contrasena(encoder.encode("admin123"))
                     .rol(admin)
                     .disponible(false)
@@ -47,37 +47,36 @@ public class DataInitializer {
 
 
             usuarioRepository.save(Usuario.builder()
-                    .nombre(AESUtil.encrypt("Pedro"))
-                    .apellido(AESUtil.encrypt("Perez"))
-                    .correo(AESUtil.encrypt("perez@demo.com"))
+                    .nombre("Pedro")
+                    .apellido("Perez")
+                    .correo("perez@demo.com")
                     .contrasena(encoder.encode("chofer123"))
                     .rol(chofer)
                     .disponible(false)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
-                    .nombre(AESUtil.encrypt("maxines"))
-                    .apellido(AESUtil.encrypt("Perez"))
-                    .correo(AESUtil.encrypt("maxi@demo.com"))
+                    .nombre("maxines")
+                    .apellido("Perez")
+                    .correo("maxi@demo.com")
                     .contrasena(encoder.encode("robotics123"))
                     .rol(chofer)
                     .disponible(true)
                     .build());
 
-
             usuarioRepository.save(Usuario.builder()
-                    .nombre(AESUtil.encrypt("Roberto"))
-                    .apellido(AESUtil.encrypt("Perez"))
-                    .correo(AESUtil.encrypt("roberto@demo.com"))
+                    .nombre("Roberto")
+                    .apellido("Perez")
+                    .correo("roberto@demo.com")
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
                     .disponible(false)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
-                    .nombre(AESUtil.encrypt("juan"))
-                    .apellido(AESUtil.encrypt("Perez"))
-                    .correo(AESUtil.encrypt("juanto@demo.com"))
+                    .nombre("juan")
+                    .apellido("Perez")
+                    .correo("juanto@demo.com")
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
                     .disponible(false)
