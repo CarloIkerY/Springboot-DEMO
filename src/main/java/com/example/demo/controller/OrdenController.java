@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -98,6 +99,35 @@ public class OrdenController {
                     .body(Map.of(
                             "message", ex.getMessage()
                     ));
+        }
+    }
+
+    @PostMapping("/agendarRecoleccion")
+    public ResponseEntity<?> agendarRecoleccion(@RequestBody OrdenDTO dto) {
+
+        if (dto.getOrden_id() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "El ID de Orden es obligatorio."
+            ));
+        }
+
+        if (dto.getFecha_recoleccion() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "La fecha para recolección es obligatoria."
+            ));
+        }
+
+        try {
+            Orden orden = ordenService.agendarFechaRecoleccion(dto);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Fecha de recolección agendada correctamente",
+                    "data", orden
+            ));
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of(
+                    "message", e.getReason()
+            ));
         }
     }
 }

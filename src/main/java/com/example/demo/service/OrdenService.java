@@ -4,7 +4,9 @@ import com.example.demo.dto.OrdenDTO;
 import com.example.demo.model.*;
 import com.example.demo.repo.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -85,10 +87,10 @@ public class OrdenService {
         if (usuario.getRol().getRol_id() == 2) {
             estadoAsignado = estadoRepository.findById(2L)
                     .orElseThrow(() -> new RuntimeException("Estado 2 no encontrado"));
-        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() < 3) {
-            estadoAsignado = estadoRepository.findById(3L)
-                    .orElseThrow(() -> new RuntimeException("Estado 3 no encontrado"));
-        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() >= 3) {
+        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() < 4) {
+            estadoAsignado = estadoRepository.findById(4L)
+                    .orElseThrow(() -> new RuntimeException("Estado 4 no encontrado"));
+        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() >= 4) {
             estadoAsignado = estadoActual;
         } else {
             throw new RuntimeException("El rol del usuario no es válido para asignación.");
@@ -105,6 +107,27 @@ public class OrdenService {
 
         // Relación bidireccional
         orden.getOrdenUsuarios().add(asignacion);
+
+        return ordenRepository.save(orden);
+    }
+
+    public Orden agendarFechaRecoleccion(OrdenDTO dto) {
+        Orden orden = ordenRepository.findById(dto.getOrden_id())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Orden no encontrada"
+                ));
+
+        Seguimiento seguimientoHoy = orden.getSeguimientos().stream()
+                .filter(s -> s.getFecha_actualizacion().isEqual(LocalDate.now()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No existe un seguimiento para hoy"));
+
+        Estado estadoAsignado = estadoRepository.findById(3L)
+                .orElseThrow(() -> new RuntimeException("Estado 3 no encontrado"));
+
+        seguimientoHoy.setEstado(estadoAsignado);
+
+        orden.setFecha_recoleccion(dto.getFecha_recoleccion());
 
         return ordenRepository.save(orden);
     }

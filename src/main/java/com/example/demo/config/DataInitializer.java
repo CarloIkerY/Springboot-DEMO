@@ -459,6 +459,10 @@ public class DataInitializer {
                     .build());
 
             estadoRepository.save(Estado.builder()
+                    .estado("Pendiente recolección")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
                     .estado("Asignado a mecánico")
                     .build());
 
@@ -480,10 +484,6 @@ public class DataInitializer {
 
             estadoRepository.save(Estado.builder()
                     .estado("Pendiente aprobación")
-                    .build());
-
-            estadoRepository.save(Estado.builder()
-                    .estado("Pendiente recolección")
                     .build());
 
             estadoRepository.save(Estado.builder()
