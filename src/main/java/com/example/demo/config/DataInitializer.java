@@ -42,9 +42,9 @@ public class DataInitializer {
                     .correo("admin@demo.com")
                     .contrasena(encoder.encode("admin123"))
                     .rol(admin)
+                    .celular("5523489076")
                     .disponible(false)
                     .build());
-
 
             usuarioRepository.save(Usuario.builder()
                     .nombre("Pedro")
@@ -52,6 +52,7 @@ public class DataInitializer {
                     .correo("perez@demo.com")
                     .contrasena(encoder.encode("chofer123"))
                     .rol(chofer)
+                    .celular("5617294438")
                     .disponible(false)
                     .build());
 
@@ -61,6 +62,7 @@ public class DataInitializer {
                     .correo("maxi@demo.com")
                     .contrasena(encoder.encode("robotics123"))
                     .rol(chofer)
+                    .celular("3318459201")
                     .disponible(true)
                     .build());
 
@@ -70,6 +72,7 @@ public class DataInitializer {
                     .correo("roberto@demo.com")
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
+                    .celular("8116623074")
                     .disponible(false)
                     .build());
 
@@ -79,6 +82,7 @@ public class DataInitializer {
                     .correo("juanto@demo.com")
                     .contrasena(encoder.encode("mecanico123"))
                     .rol(mecanico)
+                    .celular("5539741286")
                     .disponible(false)
                     .build());
 
