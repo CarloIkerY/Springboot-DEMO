@@ -24,10 +24,6 @@ public class Auto {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = true)
-    private Usuario usuario;
-
     @Column(nullable = false, length = 15)
     private String marca;
 

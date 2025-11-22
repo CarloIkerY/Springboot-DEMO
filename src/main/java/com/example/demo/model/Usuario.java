@@ -48,6 +48,4 @@ public class Usuario {
     @JsonIgnoreProperties({"usuario"})
     private List<OrdenUsuario> ordenUsuarios = new ArrayList<>();
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Auto> autos = new ArrayList<>();
 }
