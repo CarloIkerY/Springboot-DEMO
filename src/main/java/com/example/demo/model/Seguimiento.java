@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Seguimiento")
@@ -37,5 +38,5 @@ public class Seguimiento {
     private Estado estado;
 
     @Column(nullable = false)
-    private LocalDate fecha_actualizacion;
+    private LocalDateTime fecha_actualizacion;
 }

@@ -42,7 +42,7 @@ public class OrdenService {
         Seguimiento seguimiento = Seguimiento.builder()
                 .orden(orden)
                 .estado(estado)
-                .fecha_actualizacion(LocalDate.now())
+                .fecha_actualizacion(LocalDateTime.now())
                 .build();
 
         // Relación bidireccional
@@ -67,7 +67,7 @@ public class OrdenService {
 
         // Obtener seguimiento del día
         Seguimiento seguimientoHoy = orden.getSeguimientos().stream()
-                .filter(s -> s.getFecha_actualizacion().isEqual(LocalDate.now()))
+                .filter(s -> s.getFecha_actualizacion().toLocalDate().isEqual(LocalDate.now()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No existe un seguimiento para hoy"));
 
@@ -118,7 +118,7 @@ public class OrdenService {
                 ));
 
         Seguimiento seguimientoHoy = orden.getSeguimientos().stream()
-                .filter(s -> s.getFecha_actualizacion().isEqual(LocalDate.now()))
+                .filter(s -> s.getFecha_actualizacion().toLocalDate().isEqual(LocalDate.now()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No existe un seguimiento para hoy"));
 

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -17,6 +18,6 @@ public class OrdenDTO {
     private Long auto_id;
     private Long orden_id;
     private Long estado;
-    private LocalDate fecha_recoleccion;
-    private LocalDate fecha_entrega;
+    private LocalDateTime fecha_recoleccion;
+    private LocalDateTime fecha_entrega;
 }

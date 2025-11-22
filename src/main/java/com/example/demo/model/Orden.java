@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,10 @@ public class Orden {
     private String numero_orden;
 
     @Column(nullable = true)
-    private LocalDate fecha_recoleccion;
+    private LocalDateTime fecha_recoleccion;
 
     @Column(nullable = true)
-    private LocalDate fecha_entrega;
+    private LocalDateTime fecha_entrega;
 
     @Builder.Default
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
