@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
+import com.example.demo.dto.ClienteDTO;
 import com.example.demo.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -91,5 +92,16 @@ public class ClienteController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/agregarAuto")
+    public ResponseEntity<?> agregarAuto(@RequestBody ClienteConAutoDTO dto) {
+
+        ClienteConAutoDTO actualizado = clienteService.agregarAutoCliente(dto);
+
+        return ResponseEntity.ok(Map.of(
+                "data", actualizado,
+                "message", "Auto agregado correctamente"
+        ));
     }
 }

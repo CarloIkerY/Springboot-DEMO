@@ -20,4 +20,5 @@ public class ClienteConAutoDTO {
     private String direccion;
     private Boolean clienteUNAM;
     private List<AutoDTO> autos;
+    private AutoDTO auto;
 }

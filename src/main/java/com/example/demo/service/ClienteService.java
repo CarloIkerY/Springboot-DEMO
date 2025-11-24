@@ -205,4 +205,64 @@ public class ClienteService {
                 .clienteUNAM(cliente.getClienteUNAM())
                 .build();
     }
+
+    private ClienteConAutoDTO convertirClienteConAutosDTO(Cliente cliente) {
+        ClienteConAutoDTO dto = new ClienteConAutoDTO();
+
+        dto.setCliente_id(cliente.getCliente_id());
+        dto.setNombre(cliente.getNombre());
+        dto.setTelefono(cliente.getTelefono());
+        dto.setCelular(cliente.getCelular());
+        dto.setCorreo(cliente.getCorreo());
+        dto.setDireccion(cliente.getDireccion());
+        dto.setClienteUNAM(cliente.getClienteUNAM());
+
+        // Convertir autos a AutoDTO
+        List<AutoDTO> autosDTO = cliente.getAutos().stream().map(auto -> {
+            AutoDTO a = new AutoDTO();
+            a.setAuto_id(auto.getAuto_id());
+            a.setMarca(auto.getMarca());
+            a.setModelo(auto.getModelo());
+            a.setAnio(auto.getAnio());
+            a.setPlaca(auto.getPlaca());
+            a.setColor(auto.getColor());
+            a.setNumero_serie(auto.getNumero_serie());
+            a.setTransmision(auto.getTransmision());
+            return a;
+        }).collect(Collectors.toList());
+
+        dto.setAutos(autosDTO);
+
+        return dto;
+    }
+
+    public ClienteConAutoDTO agregarAutoCliente(ClienteConAutoDTO dto) {
+
+        if (dto.getCliente_id() == null) {
+            throw new RuntimeException("El ID del cliente es obligatorio");
+        }
+
+        if (dto.getAuto() == null) {
+            throw new RuntimeException("Los datos del auto son obligatorios");
+        }
+
+        Cliente cliente = clienteRepository.findById(dto.getCliente_id())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        Auto nuevoAuto = new Auto();
+        nuevoAuto.setMarca(dto.getAuto().getMarca());
+        nuevoAuto.setModelo(dto.getAuto().getModelo());
+        nuevoAuto.setAnio(dto.getAuto().getAnio());
+        nuevoAuto.setPlaca(dto.getAuto().getPlaca());
+        nuevoAuto.setColor(dto.getAuto().getColor());
+
+
+        nuevoAuto.setCliente(cliente);
+        cliente.getAutos().add(nuevoAuto);
+
+        Cliente clienteGuardado = clienteRepository.save(cliente);
+
+        return convertirClienteConAutosDTO(clienteGuardado);
+    }
+
 }
