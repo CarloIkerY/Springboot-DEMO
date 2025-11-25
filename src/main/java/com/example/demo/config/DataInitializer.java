@@ -6,6 +6,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import com.example.demo.repo.ProveedorRepository;
+import com.example.demo.repo.PiezaRepository;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,9 @@ public class DataInitializer {
     private final RolRepository rolRepository;
     private final ClienteRepository clienteRepository;
     private final EstadoRepository estadoRepository;
+    private final ProveedorRepository proveedorRepository;
+    private final PiezaRepository piezaRepository;
+
     @PostConstruct
     public void init() {
         if (rolRepository.count() == 0) {
@@ -86,6 +92,167 @@ public class DataInitializer {
                     .disponible(false)
                     .build());
 
+        }
+//  PROVEEDORES BASE
+        if (proveedorRepository.count() == 0) {
+
+            List<String> proveedores = List.of(
+                    "Santillan",
+                    "Franco",
+                    "Edzna",
+                    "California",
+                    "Embler",
+                    "Univparts",
+                    "Reyes",
+                    "JC",
+                    "Vero",
+                    "Rojas",
+                    "Guillén",
+                    "Hitachito",
+                    "Servicio omar (alineadora)",
+                    "Ríos",
+                    "Abigail",
+                    "Autoclimas",
+                    "Franco portales",
+                    "Autozone",
+                    "Runsa",
+                    "Caosa",
+                    "Cerressa",
+                    "Nieto",
+                    "Legaría",
+                    "Euroivan",
+                    "Grupi",
+                    "Gma portales",
+                    "Gma aztecas",
+                    "Panda",
+                    "Haiba",
+                    "Mercado libre",
+                    "Isaías (rectificadora)",
+                    "Lupe reyes",
+                    "Amazon",
+                    "Pension",
+                    "Reprollan",
+                    "Unión",
+                    "Ruiz",
+                    "América llantera",
+                    "Eléctrico gerardo",
+                    "Eléctrico romero"
+            );
+
+            proveedores.forEach(nombre -> {
+                proveedorRepository.save(
+                        Proveedor.builder()
+                                .nombre(nombre)
+                                .telefono("N/A")          // obligatorio
+                                .correo("N/A")            // obligatorio
+                                .build()
+                );
+            });
+        }
+
+// LISTA DE REFACCIONES y PIEZAS
+        if (piezaRepository.count() == 0) {
+
+            List<String> piezas = List.of(
+                    "Servicio de afinación de motor",
+                    "Filtro aire",
+                    "Filtro aceite",
+                    "Filtro polen",
+                    "Bujías",
+                    "Cables de bujías",
+                    "Bobinas de encendido",
+                    "Alternador",
+                    "Marcha",
+                    "Cuerpo de aceleración",
+                    "Compresor aire acondicionado",
+                    "Banda de accesorios",
+                    "Kit de distribución",
+                    "Banda de distribución",
+                    "Tensor distribución",
+                    "Tensor banda accesorios",
+                    "Polea loca",
+                    "Bomba de agua",
+                    "Balatas delanteras",
+                    "Balatas traseras",
+                    "Rectificado de discos delanteros",
+                    "Rectificado de discos traseros",
+                    "Rectificado de tambores traseros",
+                    "Rectificado de cremallera",
+                    "Limpieza y ajuste de frenos",
+                    "Calipers",
+                    "Repuesto de calipers",
+                    "Juntas homocineticas",
+                    "Tricetas",
+                    "Flechas",
+                    "Baleros delanteros",
+                    "Baleros traseros",
+                    "Maza delantera",
+                    "Maza trasera",
+                    "Amortiguadores delanteros",
+                    "Amortiguadores traseros",
+                    "Bases amortiguadores delanteros",
+                    "Bases amortiguadores traseros",
+                    "Horquillas inferiores",
+                    "Horquillas superiores",
+                    "Brazos cortos",
+                    "Brazos largos",
+                    "Gomas de barra delanteras",
+                    "Gomas de barra traseras",
+                    "Tornillos estabilizadores",
+                    "Bujes de horquilla",
+                    "Rótulas",
+                    "Mangos delanteros",
+                    "Mangos traseros",
+                    "Puente delantero",
+                    "Puente trasero",
+                    "Soportes de motor",
+                    "Soporte de caja",
+                    "Soporte inferior",
+                    "Soporte superior",
+                    "Soporte frontal",
+                    "Soporte trasero",
+                    "Junta tapa punterías",
+                    "Junta cárter",
+                    "Retén cigüeñal lado cala",
+                    "Retén cigüeñal lado poleas",
+                    "Retén árbol de levas",
+                    "Sensor maf",
+                    "Sensor map",
+                    "Sensor de oxígeno",
+                    "Sensor de cigüeñal",
+                    "Sensor de árbol de levas",
+                    "Sensor de detonación",
+                    "Scanner de motor",
+                    "Sensor temperatura",
+                    "Radiador",
+                    "Moto ventilador",
+                    "Bomba de gasolina",
+                    "Switch de encendido",
+                    "Chapas delanteras",
+                    "Chapas traseras",
+                    "Chapa cajuela",
+                    "Chapa cofre",
+                    "Amortiguador cofre",
+                    "Amortiguador cajuela",
+                    "Limpiadores delanteros",
+                    "Limpiadores traseros",
+                    "Calaveras",
+                    "Faros",
+                    "Focos stop",
+                    "Foco alta",
+                    "Foco baja",
+                    "Foco de niebla",
+                    "Foco cuartos",
+                    "Foco direccional"
+            );
+
+            piezas.forEach(nombre -> {
+                piezaRepository.save(
+                        Pieza.builder()
+                                .proveedor(null)
+                                .build()
+                );
+            });
         }
 
 
