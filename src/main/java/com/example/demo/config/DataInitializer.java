@@ -237,8 +237,6 @@ public class DataInitializer {
                     "Foco cuartos",
                     "Foco direccional"
             );
-
-
         }
 
 
