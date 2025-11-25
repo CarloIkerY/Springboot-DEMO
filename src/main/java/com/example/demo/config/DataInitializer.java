@@ -50,6 +50,7 @@ public class DataInitializer {
                     .rol(admin)
                     .celular("5523489076")
                     .disponible(false)
+
                     .build());
 
             usuarioRepository.save(Usuario.builder()
@@ -139,15 +140,6 @@ public class DataInitializer {
                     "Eléctrico romero"
             );
 
-            proveedores.forEach(nombre -> {
-                proveedorRepository.save(
-                        Proveedor.builder()
-                                .nombre(nombre)
-                                .telefono("N/A")          // obligatorio
-                                .correo("N/A")            // obligatorio
-                                .build()
-                );
-            });
         }
 
 // LISTA DE REFACCIONES y PIEZAS
@@ -246,13 +238,7 @@ public class DataInitializer {
                     "Foco direccional"
             );
 
-            piezas.forEach(nombre -> {
-                piezaRepository.save(
-                        Pieza.builder()
-                                .proveedor(null)
-                                .build()
-                );
-            });
+
         }
 
 
