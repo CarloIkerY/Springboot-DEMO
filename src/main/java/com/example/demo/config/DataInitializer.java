@@ -139,11 +139,20 @@ public class DataInitializer {
                     "Eléctrico gerardo",
                     "Eléctrico romero"
             );
-
+            proveedores.forEach(nombre -> {
+                proveedorRepository.save(
+                        Proveedor.builder()
+                                .nombre(nombre)
+                                .telefono("N/A")
+                                .correo("N/A")
+                                .build()
+                );
+            });
         }
 
 // LISTA DE REFACCIONES y PIEZAS
         if (piezaRepository.count() == 0) {
+            Proveedor proveedorGenerico = proveedorRepository.findAll().get(0);
 
             List<String> piezas = List.of(
                     "Servicio de afinación de motor",
@@ -237,7 +246,15 @@ public class DataInitializer {
                     "Foco cuartos",
                     "Foco direccional"
             );
-
+            piezas.forEach(nombre -> {
+                piezaRepository.save(
+                        Pieza.builder()
+                                .nombre(nombre)
+                                .costo_unitario(0.0)
+                                .proveedor(proveedorGenerico) //
+                                .build()
+                );
+            });
 
         }
 
