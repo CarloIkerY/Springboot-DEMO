@@ -25,8 +25,8 @@ public class EstadoController {
         List<Estado> estados = estadoService.obtenerListado();
 
         return ResponseEntity.ok(Map.of(
-                "message", "Lista de estados obtenida correctamente",
-                "data", estados
+                "data", estados,
+                "message", "Lista de estados obtenida correctamente"
         ));
     }
 }
