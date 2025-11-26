@@ -59,8 +59,8 @@ public class DataInitializer {
                     .correo("perez@demo.com")
                     .contrasena(encoder.encode("chofer123"))
                     .rol(chofer)
-                    .celular("5617294438")
-                    .disponible(false)
+                    .celular("5529626956")
+                    .disponible(true)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
@@ -69,7 +69,7 @@ public class DataInitializer {
                     .correo("maxi@demo.com")
                     .contrasena(encoder.encode("robotics123"))
                     .rol(chofer)
-                    .celular("3318459201")
+                    .celular("5627539129")
                     .disponible(true)
                     .build());
 
