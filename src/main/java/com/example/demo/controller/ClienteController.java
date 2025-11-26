@@ -101,7 +101,7 @@ public class ClienteController {
 
         return ResponseEntity.ok(Map.of(
                 "data", actualizado,
-                "message", "Auto agregado correctamente"
+                "message", "Auto agregado correctamente."
         ));
     }
 }
