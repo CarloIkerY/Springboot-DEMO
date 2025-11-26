@@ -20,7 +20,7 @@ public class Pieza {
     private Integer pieza_id;
 
     @ManyToOne
-    @JoinColumn(name = "proveedor_id", nullable = false)
+    @JoinColumn(name = "proveedor_id", nullable = true)
     private Proveedor proveedor;
 
     @Column(nullable = false)
