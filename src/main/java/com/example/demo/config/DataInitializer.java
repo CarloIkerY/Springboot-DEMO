@@ -59,8 +59,8 @@ public class DataInitializer {
                     .correo("perez@demo.com")
                     .contrasena(encoder.encode("chofer123"))
                     .rol(chofer)
-                    .celular("5617294438")
-                    .disponible(false)
+                    .celular("5529626956")
+                    .disponible(true)
                     .build());
 
             usuarioRepository.save(Usuario.builder()
@@ -69,7 +69,7 @@ public class DataInitializer {
                     .correo("maxi@demo.com")
                     .contrasena(encoder.encode("robotics123"))
                     .rol(chofer)
-                    .celular("3318459201")
+                    .celular("5627539129")
                     .disponible(true)
                     .build());
 
@@ -139,11 +139,20 @@ public class DataInitializer {
                     "Eléctrico gerardo",
                     "Eléctrico romero"
             );
-
+            proveedores.forEach(nombre -> {
+                proveedorRepository.save(
+                        Proveedor.builder()
+                                .nombre(nombre)
+                                .telefono("N/A")
+                                .correo("N/A")
+                                .build()
+                );
+            });
         }
 
 // LISTA DE REFACCIONES y PIEZAS
         if (piezaRepository.count() == 0) {
+            Proveedor proveedorGenerico = proveedorRepository.findAll().get(0);
 
             List<String> piezas = List.of(
                     "Servicio de afinación de motor",
@@ -237,6 +246,16 @@ public class DataInitializer {
                     "Foco cuartos",
                     "Foco direccional"
             );
+            piezas.forEach(nombre -> {
+                piezaRepository.save(
+                        Pieza.builder()
+                                .nombre(nombre)
+                                .costo_unitario(0.0)
+                                .proveedor(null) //
+                                .build()
+                );
+            });
+
         }
 
 
