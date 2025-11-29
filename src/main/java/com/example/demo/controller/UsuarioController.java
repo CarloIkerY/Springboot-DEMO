@@ -49,4 +49,37 @@ public class UsuarioController {
 
         return ResponseEntity.ok(respuesta);
     }
+
+    @GetMapping("/mecanicos/disponibles")
+    public ResponseEntity<UsuariosResponseDTO> obtenerMecanicosDisponibles() {
+
+        // Busca todos los usuarios con rol MECANICO
+        List<Usuario> usuarios = usuarioRepository
+                .findByRol_NombreAndDisponible("MECANICO", true);
+
+        // Mapea Usuario
+        List<UsuarioChoferDTO> data = usuarios.stream().map(u ->
+                UsuarioChoferDTO.builder()
+                        .id(u.getUsuario_id())
+                        .nombre(
+                                (u.getNombre() != null ? u.getNombre() : "") + " " +
+                                        (u.getApellido() != null ? u.getApellido() : "")
+                        )
+                        .email(u.getCorreo())
+                        .telefono(u.getCelular())
+                        .tipo(u.getRol() != null ? u.getRol().getNombre().toLowerCase() : null) // "mecanico"
+                        .disponible(Boolean.TRUE.equals(u.getDisponible()))
+                        .vehiculo_asignado(null)
+                        .build()
+        ).toList();
+
+        UsuariosResponseDTO respuesta = UsuariosResponseDTO.builder()
+                .success(true)
+                .data(data)
+                .build();
+
+        return ResponseEntity.ok(respuesta);
+    }
 }
+
+
