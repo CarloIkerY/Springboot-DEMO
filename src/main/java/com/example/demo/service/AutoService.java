@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -55,5 +57,13 @@ public class AutoService {
         condicion.setDetalles(plantilla);
 
         return condicionAutoRepository.save(condicion);
+    }
+
+    public List<Condicion_auto> obtenerEstadosActuales(List<Long> ids) {
+        return ids.stream()
+                .map(autoId ->
+                        condicionAutoRepository.findActiveByAutoId(autoId).orElse(null)
+                )
+                .toList();
     }
 }
