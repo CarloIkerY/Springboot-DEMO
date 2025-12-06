@@ -7,12 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,8 +55,15 @@ public class AutoController {
         Condicion_auto guardado = autoService.registrarCondicion(dto);
 
         return ResponseEntity.ok(Map.of(
-                "data", guardado,
-                "message", "Condición registrada correctamente"
+                "message", "Condición registrada correctamente",
+                "data", guardado
         ));
+    }
+
+    @GetMapping("/condicion/actual")
+    public ResponseEntity<?> obtenerCondicionesActuales(@RequestParam List<Long> ids) {
+        List<Condicion_auto> condiciones = autoService.obtenerEstadosActuales(ids);
+
+        return ResponseEntity.ok(Map.of("data", condiciones));
     }
 }
