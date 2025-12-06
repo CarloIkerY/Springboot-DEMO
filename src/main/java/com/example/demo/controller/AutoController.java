@@ -55,8 +55,8 @@ public class AutoController {
         Condicion_auto guardado = autoService.registrarCondicion(dto);
 
         return ResponseEntity.ok(Map.of(
-                "data", guardado,
-                "message", "Condición registrada correctamente"
+                "message", "Condición registrada correctamente",
+                "data", guardado
         ));
     }
 

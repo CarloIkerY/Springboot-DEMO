@@ -3,8 +3,12 @@ package com.example.demo.service;
 import com.example.demo.dto.CondicionAutoDTO;
 import com.example.demo.model.Auto;
 import com.example.demo.model.Condicion_auto;
+import com.example.demo.model.Estado;
+import com.example.demo.model.Seguimiento;
 import com.example.demo.repo.AutoRepository;
 import com.example.demo.repo.CondicionAutoRepository;
+import com.example.demo.repo.EstadoRepository;
+import com.example.demo.repo.SeguimientoRepository;
 import com.example.demo.utils.CondicionAutoTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +25,17 @@ import java.util.Optional;
 public class AutoService {
 
     @Autowired
-    private AutoRepository autoRepository;
-
-    @Autowired
-    private CondicionAutoRepository condicionAutoRepository;
+    private final AutoRepository autoRepository;
+    private final CondicionAutoRepository condicionAutoRepository;
+    private final SeguimientoRepository seguimientoRepository;
+    private final EstadoRepository estadoRepository;
 
     public Condicion_auto registrarCondicion(CondicionAutoDTO dto) {
 
         Auto auto = autoRepository.findById(dto.getAuto_id())
                 .orElseThrow(() -> new RuntimeException("Auto no encontrado"));
 
-        // 1. Crear condición
+        // Crear condición
         Condicion_auto condicion = new Condicion_auto();
         condicion.setAuto(auto);
         condicion.setFecha_origen(LocalDateTime.now());
@@ -40,21 +44,27 @@ public class AutoService {
         condicion.setKilometraje(dto.getKilometraje());
         condicion.setEstado_actual(true);
 
-        // 2. Cargar plantilla base (YA ES LinkedHashMap)
+        // Plantilla
         LinkedHashMap<String, Object> plantilla = CondicionAutoTemplate.getTemplate();
 
-        // 3. Si el usuario envía detalles, aseguramos que mantengan orden
         if (dto.getDetalles() != null) {
-            // Convertir los detalles entrantes a LinkedHashMap para mantener orden
             LinkedHashMap<String, Object> detallesOrdenados = new LinkedHashMap<>(dto.getDetalles());
-
-            // Mezclar plantilla + valores del usuario
-            for (String key : detallesOrdenados.keySet()) {
-                plantilla.put(key, detallesOrdenados.get(key));
-            }
+            detallesOrdenados.forEach(plantilla::put);
         }
 
         condicion.setDetalles(plantilla);
+
+        // 🔥 1. Obtener seguimiento desde orden
+        Seguimiento seguimiento = seguimientoRepository.findByOrdenId(dto.getOrden_id())
+                .orElseThrow(() -> new RuntimeException("Seguimiento no encontrado para la orden"));
+
+        // 🔥 2. Cargar estado 4
+        Estado estado = estadoRepository.findById(4L)
+                .orElseThrow(() -> new RuntimeException("No existe estado 4"));
+
+        // 🔥 3. Cambiar estado en seguimiento
+        seguimiento.setEstado(estado);
+        seguimientoRepository.save(seguimiento);
 
         return condicionAutoRepository.save(condicion);
     }

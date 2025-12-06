@@ -87,10 +87,10 @@ public class OrdenService {
         if (usuario.getRol().getRol_id() == 2) {
             estadoAsignado = estadoRepository.findById(2L)
                     .orElseThrow(() -> new RuntimeException("Estado 2 no encontrado"));
-        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() < 4) {
-            estadoAsignado = estadoRepository.findById(4L)
+        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() < 5) {
+            estadoAsignado = estadoRepository.findById(5L)
                     .orElseThrow(() -> new RuntimeException("Estado 4 no encontrado"));
-        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() >= 4) {
+        } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() >= 5) {
             estadoAsignado = estadoActual;
         } else {
             throw new RuntimeException("El rol del usuario no es válido para asignación.");

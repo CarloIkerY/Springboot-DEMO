@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AutoDTO {
     private Long auto_id;
+    private Long orden_id;
     private String marca;
     private String modelo;
     private Integer anio;
