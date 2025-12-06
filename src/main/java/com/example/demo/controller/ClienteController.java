@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.dto.ModificarClienteDTO;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -103,5 +105,27 @@ public class ClienteController {
                 "data", actualizado,
                 "message", "Auto agregado correctamente."
         ));
+
+    }
+    @PostMapping("/actualizar/{id}")
+    public ResponseEntity<?> actualizarCliente(
+            @PathVariable Long id,
+            @RequestBody ModificarClienteDTO dto) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            ClienteConAutoDTO actualizado = clienteService.actualizarCliente(id, dto);
+
+            response.put("data", actualizado);
+            response.put("message", "Cliente actualizado correctamente.");
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+            response.put("data", null);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 }

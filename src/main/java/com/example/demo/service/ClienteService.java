@@ -1,9 +1,11 @@
 package com.example.demo.service;
+import com.example.demo.dto.ModificarClienteDTO;
 
 import com.example.demo.config.AESUtil;
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
 import com.example.demo.dto.ClienteDTO;
+import com.example.demo.dto.ModificarClienteDTO;
 import com.example.demo.model.Auto;
 import com.example.demo.model.Cliente;
 import com.example.demo.repo.ClienteRepository;
@@ -264,5 +266,31 @@ public class ClienteService {
 
         return convertirClienteConAutosDTO(clienteGuardado);
     }
+    public ClienteConAutoDTO actualizarCliente(Long id, ModificarClienteDTO dto) {
 
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        if (dto.getNombre() != null) {
+            cliente.setNombre(dto.getNombre());
+        }
+
+        if (dto.getCelular() != null) {
+            cliente.setCelular(dto.getCelular());
+        }
+
+        if (dto.getDireccion() != null) {
+            cliente.setDireccion(dto.getDireccion());
+        }
+
+        if (dto.getClienteUNAM() != null) {
+            cliente.setClienteUNAM(dto.getClienteUNAM());
+        }
+
+        Cliente clienteGuardado = clienteRepository.save(cliente);
+
+
+        return convertirClienteConAutosDTO(clienteGuardado);
+    }
 }
+
