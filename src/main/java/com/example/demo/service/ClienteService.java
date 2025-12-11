@@ -68,6 +68,7 @@ public class ClienteService {
                             .anio(autoDTO.getAnio())
                             .placa(autoDTO.getPlaca())
                             .color(autoDTO.getColor())
+                            .numero_serie(autoDTO.getNumero_serie())
                             .cliente(cliente)
                             .build();
 
@@ -91,6 +92,7 @@ public class ClienteService {
                         .anio(autoDTO.getAnio())
                         .placa(autoDTO.getPlaca())
                         .color(autoDTO.getColor())
+                        .numero_serie(autoDTO.getNumero_serie())
                         .cliente(cliente)
                         .build();
 
@@ -116,6 +118,7 @@ public class ClienteService {
                         //.placa(AESUtil.decrypt(auto.getPlaca()))
                         .placa(auto.getPlaca())
                         .color(auto.getColor())
+                        .numero_serie(auto.getNumero_serie())
                         .build()
         ).toList();
 
@@ -255,6 +258,7 @@ public class ClienteService {
         nuevoAuto.setAnio(dto.getAuto().getAnio());
         nuevoAuto.setPlaca(dto.getAuto().getPlaca());
         nuevoAuto.setColor(dto.getAuto().getColor());
+        nuevoAuto.setNumero_serie(dto.getAuto().getNumero_serie());
 
 
         nuevoAuto.setCliente(cliente);
