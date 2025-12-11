@@ -93,6 +93,16 @@ public class DataInitializer {
                     .disponible(false)
                     .build());
 
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("gerente")
+                    .apellido("gerente")
+                    .correo("gerente@demo.com")
+                    .contrasena(encoder.encode("gerente123"))
+                    .rol(gerente)
+                    .celular("5523489076")
+                    .disponible(false)
+                    .build());
+
         }
 //  PROVEEDORES BASE
         if (proveedorRepository.count() == 0) {

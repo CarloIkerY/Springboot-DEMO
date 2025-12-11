@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -129,6 +130,46 @@ public class OrdenService {
 
         orden.setFecha_recoleccion(dto.getFecha_recoleccion());
 
+        return ordenRepository.save(orden);
+    }
+
+    public Orden cambiarEstado(OrdenDTO dto) {
+
+        // 1. Obtener la orden
+        Orden orden = ordenRepository.findById(dto.getOrden_id())
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        // 2. Obtener el usuario
+        Usuario usuario = usuarioRepository.findById(dto.getUsuario_id())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // 3. Validar si es GERENTE (rol_id = 4)
+        if (usuario.getRol().getRol_id() != 4) {
+            throw new RuntimeException("Solo un usuario GERENTE puede cambiar el estado manualmente.");
+        }
+
+        // 4. Obtener el seguimiento más reciente (última actualización)
+        Seguimiento seguimientoActual = orden.getSeguimientos().stream()
+                .sorted(Comparator.comparing(Seguimiento::getFecha_actualizacion).reversed())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("La orden no tiene seguimientos."));
+
+        // 5. Obtener el estado nuevo por ID
+        Estado nuevoEstado = estadoRepository.findById(dto.getEstado())
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+
+        // 6. Actualizar estado del seguimiento más reciente
+        seguimientoActual.setEstado(nuevoEstado);
+        seguimientoActual.setFecha_actualizacion(LocalDateTime.now());
+
+        // 7. Registrar un historial de asignación (opcional pero profesional)
+        OrdenUsuario asignacion = new OrdenUsuario();
+        asignacion.setOrden(orden);
+        asignacion.setUsuario(usuario);
+        asignacion.setFecha_asignacion(LocalDate.now());
+        orden.getOrdenUsuarios().add(asignacion);
+
+        // 8. Guardar cambios
         return ordenRepository.save(orden);
     }
 }

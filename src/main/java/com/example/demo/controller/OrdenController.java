@@ -130,4 +130,40 @@ public class OrdenController {
             ));
         }
     }
+
+    @PostMapping("/cambiarEstado")
+    public ResponseEntity<?> cambiarEstado(@RequestBody OrdenDTO dto) {
+
+        if (dto.getOrden_id() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "El ID de la orden es obligatorio."
+            ));
+        }
+
+        if (dto.getUsuario_id() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "El ID del usuario es obligatorio."
+            ));
+        }
+
+        if (dto.getEstado() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "El estado es obligatorio."
+            ));
+        }
+
+        try {
+            Orden orden = ordenService.cambiarEstado(dto);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Estado cambiado correctamente",
+                    "data", orden
+            ));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
 }
