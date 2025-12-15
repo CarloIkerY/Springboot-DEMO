@@ -13,6 +13,7 @@ import java.util.Map;
 @Builder
 public class CondicionAutoDTO {
     private Long auto_id;
+    private Long orden_id;
     private String descripcion;
     private String observaciones;
     private Integer kilometraje;
