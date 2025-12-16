@@ -93,6 +93,16 @@ public class DataInitializer {
                     .disponible(false)
                     .build());
 
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("gerente")
+                    .apellido("gerente")
+                    .correo("gerente@demo.com")
+                    .contrasena(encoder.encode("gerente123"))
+                    .rol(gerente)
+                    .celular("5523489076")
+                    .disponible(false)
+                    .build());
+
         }
 //  PROVEEDORES BASE
         if (proveedorRepository.count() == 0) {
@@ -269,7 +279,6 @@ public class DataInitializer {
             c1.setNombre("Jorge");
             c1.setCelular("1234567890");
             c1.setDireccion("New York");
-            c1.setClienteUNAM(false);
             c1.setAutos(new ArrayList<>());
 
             Auto a1 = new Auto();
@@ -306,7 +315,6 @@ public class DataInitializer {
             c2.setNombre("Laura");
             c2.setCelular("5551112222");
             c2.setDireccion("CDMX");
-            c2.setClienteUNAM(false);
             c2.setAutos(new ArrayList<>());
 
             Auto a2 = new Auto();
@@ -325,7 +333,6 @@ public class DataInitializer {
             c3.setNombre("Pedro");
             c3.setCelular("5553334444");
             c3.setDireccion("Monterrey");
-            c3.setClienteUNAM(true);
             c3.setAutos(new ArrayList<>());
 
             Auto a3 = new Auto();
@@ -341,7 +348,6 @@ public class DataInitializer {
             c4.setNombre("María");
             c4.setCelular("5552221111");
             c4.setDireccion("Guadalajara");
-            c4.setClienteUNAM(false);
             c4.setAutos(new ArrayList<>());
 
             Auto a4 = new Auto();
@@ -357,7 +363,6 @@ public class DataInitializer {
             c5.setNombre("Luis");
             c5.setCelular("5557778888");
             c5.setDireccion("Puebla");
-            c5.setClienteUNAM(true);
             c5.setAutos(new ArrayList<>());
 
             Auto a5 = new Auto();
@@ -373,7 +378,6 @@ public class DataInitializer {
             c6.setNombre("Valeria");
             c6.setCelular("5556665555");
             c6.setDireccion("Querétaro");
-            c6.setClienteUNAM(false);
             c6.setAutos(new ArrayList<>());
 
             Auto a6 = new Auto();
@@ -389,7 +393,6 @@ public class DataInitializer {
             c7.setNombre("Fernando");
             c7.setCelular("5551239876");
             c7.setDireccion("Tijuana");
-            c7.setClienteUNAM(false);
             c7.setAutos(new ArrayList<>());
 
             Auto a7 = new Auto();
@@ -405,7 +408,6 @@ public class DataInitializer {
             c8.setNombre("Ana");
             c8.setCelular("5553332221");
             c8.setDireccion("León");
-            c8.setClienteUNAM(true);
             c8.setAutos(new ArrayList<>());
 
             Auto a8 = new Auto();
@@ -421,7 +423,6 @@ public class DataInitializer {
             c9.setNombre("Miguel");
             c9.setCelular("5559090909");
             c9.setDireccion("Cancún");
-            c9.setClienteUNAM(false);
             c9.setAutos(new ArrayList<>());
 
             Auto a9 = new Auto();
@@ -437,7 +438,6 @@ public class DataInitializer {
             c10.setNombre("Elena");
             c10.setCelular("5554567890");
             c10.setDireccion("Toluca");
-            c10.setClienteUNAM(true);
             c10.setAutos(new ArrayList<>());
 
             Auto a10 = new Auto();
@@ -453,7 +453,6 @@ public class DataInitializer {
             c11.setNombre("Lucía");
             c11.setCelular("5551110000");
             c11.setDireccion("Veracruz");
-            c11.setClienteUNAM(false);
             c11.setAutos(new ArrayList<>());
 
             Auto a11 = new Auto();
@@ -469,7 +468,6 @@ public class DataInitializer {
             c12.setNombre("Pablo");
             c12.setCelular("5551010101");
             c12.setDireccion("Hermosillo");
-            c12.setClienteUNAM(false);
             c12.setAutos(new ArrayList<>());
 
             Auto a12 = new Auto();
@@ -485,7 +483,6 @@ public class DataInitializer {
             c13.setNombre("Raúl");
             c13.setCelular("5557776666");
             c13.setDireccion("Durango");
-            c13.setClienteUNAM(true);
             c13.setAutos(new ArrayList<>());
 
             Auto a13 = new Auto();
@@ -501,7 +498,6 @@ public class DataInitializer {
             c14.setNombre("Camila");
             c14.setCelular("5554443332");
             c14.setDireccion("Mazatlán");
-            c14.setClienteUNAM(false);
             c14.setAutos(new ArrayList<>());
 
             Auto a14 = new Auto();
@@ -517,7 +513,6 @@ public class DataInitializer {
             c15.setNombre("José");
             c15.setCelular("5559876543");
             c15.setDireccion("Mérida");
-            c15.setClienteUNAM(false);
             c15.setAutos(new ArrayList<>());
 
             Auto a15 = new Auto();
@@ -533,7 +528,6 @@ public class DataInitializer {
             c16.setNombre("Andrés");
             c16.setCelular("5550900789");
             c16.setDireccion("Colima");
-            c16.setClienteUNAM(true);
             c16.setAutos(new ArrayList<>());
 
             Auto a16 = new Auto();
@@ -549,7 +543,6 @@ public class DataInitializer {
             c17.setNombre("Daniela");
             c17.setCelular("5551122334");
             c17.setDireccion("Aguascalientes");
-            c17.setClienteUNAM(false);
             c17.setAutos(new ArrayList<>());
 
             Auto a17 = new Auto();
@@ -565,7 +558,6 @@ public class DataInitializer {
             c18.setNombre("Sergio");
             c18.setCelular("5556677889");
             c18.setDireccion("Chihuahua");
-            c18.setClienteUNAM(false);
             c18.setAutos(new ArrayList<>());
 
             Auto a18 = new Auto();
@@ -581,7 +573,6 @@ public class DataInitializer {
             c19.setNombre("Gabriela");
             c19.setCelular("5553344556");
             c19.setDireccion("Morelia");
-            c19.setClienteUNAM(true);
             c19.setAutos(new ArrayList<>());
 
             Auto a19 = new Auto();
@@ -597,7 +588,6 @@ public class DataInitializer {
             c20.setNombre("Fernando");
             c20.setCelular("5557788990");
             c20.setDireccion("Cuernavaca");
-            c20.setClienteUNAM(false);
             c20.setAutos(new ArrayList<>());
 
             Auto a20 = new Auto();

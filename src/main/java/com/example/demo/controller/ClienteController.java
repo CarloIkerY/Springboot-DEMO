@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AutoDTO;
 import com.example.demo.dto.ClienteConAutoDTO;
-import com.example.demo.dto.ClienteDTO;
 import com.example.demo.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,11 +41,6 @@ public class ClienteController {
 
         if (dto.getAutos() == null || dto.getAutos().isEmpty()) {
             response.put("data", Map.of("error", "Debe incluir al menos un auto."));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
-        if (dto.getClienteUNAM() == null) {
-            response.put("data", Map.of("error", "La bandera UNAM es obligatoria."));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 

@@ -20,6 +20,10 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cliente_id;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = true)
+    private Empresa empresa;
+
     @Column(nullable = false, length = 50)
     private String nombre;
 
@@ -34,9 +38,6 @@ public class Cliente {
 
     @Column(nullable = false, length = 100)
     private String direccion;
-
-    @Column(nullable = false)
-    private Boolean clienteUNAM;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
