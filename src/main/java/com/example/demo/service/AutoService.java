@@ -76,4 +76,32 @@ public class AutoService {
                 )
                 .toList();
     }
+
+    public Condicion_auto actualizarCondicion(
+            Long autoId,
+            Map<String, Object> nuevosDetalles
+    ) {
+
+        Condicion_auto condicion = condicionAutoRepository
+                .findActiveByAutoId(autoId)
+                .orElseThrow(() -> new RuntimeException("No existe condición activa"));
+
+        // 1️⃣ Convertir SIEMPRE a LinkedHashMap
+        LinkedHashMap<String, Object> actuales =
+                new LinkedHashMap<>(condicion.getDetalles());
+
+        // 2️⃣ Actualizar solo lo que llega
+        for (Map.Entry<String, Object> entry : nuevosDetalles.entrySet()) {
+            if (entry.getValue() == null) {
+                actuales.remove(entry.getKey());   // quitar campo
+            } else {
+                actuales.put(entry.getKey(), entry.getValue()); // actualizar / agregar
+            }
+        }
+
+        // 3️⃣ Guardar de nuevo
+        condicion.setDetalles(actuales);
+
+        return condicionAutoRepository.save(condicion);
+    }
 }

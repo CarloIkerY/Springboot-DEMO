@@ -66,4 +66,14 @@ public class AutoController {
 
         return ResponseEntity.ok(Map.of("data", condiciones));
     }
+
+    @PatchMapping("/condiciones/auto/{autoId}")
+    public ResponseEntity<?> actualizarCondicion(
+            @PathVariable Long autoId,
+            @RequestBody Map<String, Object> detalles
+    ) {
+        return ResponseEntity.ok(
+                autoService.actualizarCondicion(autoId, detalles)
+        );
+    }
 }
