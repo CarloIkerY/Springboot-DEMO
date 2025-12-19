@@ -10,5 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ProveedorDTO {
-    private Long proveedor_id;
+    // "AGREGAR" | "ELIMINAR"
+    private String accion;
+
+    // Para ELIMINAR
+    private Integer proveedor_id;
+
+    // Para AGREGAR
+    private String nombre;
+    private String telefono;
+    private String correo;
 }

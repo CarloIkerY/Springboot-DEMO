@@ -130,5 +130,16 @@ public class OrdenService {
         orden.setFecha_recoleccion(dto.getFecha_recoleccion());
 
         return ordenRepository.save(orden);
+
+
     }
+
+    public List<Orden> obtenerOrdenesAsignadasAChofer(Long choferId) {
+        return ordenRepository.findOrdenesAsignadasAChofer(choferId);
+    }
+
+    public List<Orden> obtenerOrdenesAsignadasAMecanico(Long mecanicoId) {
+        return ordenRepository.findOrdenesAsignadasAMecanico(mecanicoId);
+    }
+
 }

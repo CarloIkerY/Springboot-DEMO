@@ -17,4 +17,5 @@ public class UsuarioChoferDTO {
     private String tipo;
     private boolean disponible;
     private VehiculoAsignado vehiculo_asignado;
+
 }
