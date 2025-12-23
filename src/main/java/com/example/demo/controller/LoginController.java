@@ -46,5 +46,4 @@ public class LoginController {
     public ResponseEntity<?> logout() {
         return ResponseEntity.ok("Sesión cerrada correctamente");
     }
-
 }

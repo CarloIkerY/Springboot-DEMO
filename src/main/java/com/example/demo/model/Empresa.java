@@ -23,13 +23,7 @@ public class Empresa {
     @Column(nullable = false, length = 50)
     private String nombre;
 
-    @Column(nullable = false, length = 50)
-    private String dependencia;
-
-    @Column(nullable = false, length = 50)
-    private String telefonoOficina;
-
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Cliente> clientes = new ArrayList<>();
+    private List<Empresa_cliente> empresaClientes = new ArrayList<>();
 }

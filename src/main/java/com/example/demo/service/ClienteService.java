@@ -1,15 +1,12 @@
 package com.example.demo.service;
-import com.example.demo.dto.ModificarClienteDTO;
+import com.example.demo.dto.*;
 
-import com.example.demo.dto.AutoDTO;
-import com.example.demo.dto.ClienteConAutoDTO;
-import com.example.demo.dto.ClienteDTO;
-import com.example.demo.dto.EmpresaDTO;
-import com.example.demo.dto.ModificarClienteDTO;
 import com.example.demo.model.Auto;
 import com.example.demo.model.Cliente;
 import com.example.demo.model.Empresa;
+import com.example.demo.model.Empresa_cliente;
 import com.example.demo.repo.ClienteRepository;
+import com.example.demo.repo.EmpresaClienteRepository;
 import com.example.demo.repo.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +21,7 @@ import java.util.stream.Collectors;
 public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmpresaClienteRepository empresaClienteRepository;
     private final EmpresaRepository empresaRepository;
 
     public ClienteDTO createCliente(ClienteDTO dto){
@@ -45,79 +42,85 @@ public class ClienteService {
 
     public ClienteConAutoDTO createClienteConAuto(ClienteConAutoDTO dto) {
 
-        // 1. Determinar si aplica empresa
-        Empresa empresa = null;
+        Empresa_cliente empresaCliente = null;
 
-        if (dto.getEmpresa() != null) {
+        // EMPRESA / EMPRESA_CLIENTE
+        if (dto.getEmpresa() != null && dto.getEmpresa().getEmpresa() != null) {
+
+            EmpresaClienteDTO ecDTO = dto.getEmpresa();
+            EmpresaDTO eDTO = ecDTO.getEmpresa();
+
+            String nombreEmpresa = eDTO.getNombre();
+            String dependencia = ecDTO.getDependencia();
+            String telefono = ecDTO.getTelefonoOficina();
 
             boolean tieneEmpresa =
-                    dto.getEmpresa().getNombreEmpresa() != null && !dto.getEmpresa().getNombreEmpresa().trim().isEmpty()
-                            && dto.getEmpresa().getDependenciaEmpresa() != null && !dto.getEmpresa().getDependenciaEmpresa().trim().isEmpty()
-                            && dto.getEmpresa().getTelefonoOficinaEmpresa() != null && !dto.getEmpresa().getTelefonoOficinaEmpresa().trim().isEmpty();
+                    nombreEmpresa != null && !nombreEmpresa.isBlank()
+                            && dependencia != null && !dependencia.isBlank()
+                            && telefono != null && !telefono.isBlank();
 
             if (tieneEmpresa) {
-                empresa = empresaRepository
-                        .findByNombreAndDependenciaAndTelefonoOficina(
-                                dto.getEmpresa().getNombreEmpresa(),
-                                dto.getEmpresa().getDependenciaEmpresa(),
-                                dto.getEmpresa().getTelefonoOficinaEmpresa()
+
+                // EMPRESA
+                Empresa empresa = empresaRepository
+                        .findByNombre(nombreEmpresa)
+                        .orElseGet(() ->
+                                empresaRepository.save(
+                                        Empresa.builder()
+                                                .nombre(nombreEmpresa)
+                                                .build()
+                                )
+                        );
+
+                // EMPRESA_CLIENTE
+                empresaCliente = empresaClienteRepository
+                        .findByEmpresaAndDependenciaAndTelefonoOficina(
+                                empresa, dependencia, telefono
                         )
-                        .orElseGet(() -> {
-                            Empresa nuevaEmpresa = Empresa.builder()
-                                    .nombre(dto.getEmpresa().getNombreEmpresa())
-                                    .dependencia(dto.getEmpresa().getDependenciaEmpresa())
-                                    .telefonoOficina(dto.getEmpresa().getTelefonoOficinaEmpresa())
-                                    .build();
-                            return empresaRepository.save(nuevaEmpresa);
-                        });
+                        .orElseGet(() ->
+                                empresaClienteRepository.save(
+                                        Empresa_cliente.builder()
+                                                .empresa(empresa)
+                                                .dependencia(dependencia)
+                                                .telefonoOficina(telefono)
+                                                .build()
+                                )
+                        );
             }
         }
 
-        // 2. Buscar o crear cliente
-        Cliente cliente = clienteRepository
-                .findByNombreAndCelular(dto.getNombre(), dto.getCelular())
-                .orElseGet(() -> Cliente.builder()
-                        .nombre(dto.getNombre())
-                        .celular(dto.getCelular())
-                        .direccion(dto.getDireccion())
-                        .autos(new ArrayList<>())
-                        .build()
+        // CLIENTE
+        Cliente cliente = Cliente.builder()
+                .nombre(dto.getNombre())
+                .celular(dto.getCelular())
+                .direccion(dto.getDireccion())
+                .empresa_cliente(empresaCliente)
+                .autos(new ArrayList<>())
+                .build();
+
+        // AUTOS
+        if (dto.getAutos() != null) {
+            for (AutoDTO a : dto.getAutos()) {
+                cliente.getAutos().add(
+                        Auto.builder()
+                                .marca(a.getMarca())
+                                .modelo(a.getModelo())
+                                .anio(a.getAnio())
+                                .placa(a.getPlaca())
+                                .color(a.getColor())
+                                .numero_serie(a.getNumero_serie())
+                                .cliente(cliente)
+                                .build()
                 );
-
-        // 3. Asignar empresa (puede quedar null y es válido)
-        cliente.setEmpresa(empresa);
-
-        // 4. Agregar autos si no existen
-        for (AutoDTO autoDTO : dto.getAutos()) {
-
-            boolean yaExiste = cliente.getAutos().stream()
-                    .anyMatch(a -> a.getPlaca().equals(autoDTO.getPlaca()));
-
-            if (!yaExiste) {
-                Auto auto = Auto.builder()
-                        .marca(autoDTO.getMarca())
-                        .modelo(autoDTO.getModelo())
-                        .anio(autoDTO.getAnio())
-                        .placa(autoDTO.getPlaca())
-                        .color(autoDTO.getColor())
-                        .numero_serie(autoDTO.getNumero_serie())
-                        .cliente(cliente)
-                        .build();
-
-                cliente.getAutos().add(auto);
             }
         }
 
-        // 5. Guardar cliente (cascade guarda autos)
-        cliente = clienteRepository.save(cliente);
-
-        return toClienteConAutosRespuestaDTO(cliente);
+        // RESPUESTA
+        return toClienteConAutosRespuestaDTO(clienteRepository.save(cliente));
     }
-
 
     private ClienteConAutoDTO toClienteConAutosRespuestaDTO(Cliente cliente) {
 
-        // 1. Mapear autos
         List<AutoDTO> autosDTO = cliente.getAutos().stream()
                 .map(auto -> AutoDTO.builder()
                         .auto_id(auto.getAuto_id())
@@ -131,7 +134,6 @@ public class ClienteService {
                 )
                 .toList();
 
-        // 2. Construir DTO base del cliente
         ClienteConAutoDTO.ClienteConAutoDTOBuilder builder =
                 ClienteConAutoDTO.builder()
                         .cliente_id(cliente.getCliente_id())
@@ -142,18 +144,23 @@ public class ClienteService {
                         .direccion(cliente.getDireccion())
                         .autos(autosDTO);
 
-        // 3. Mapear empresa SOLO si existe relación
-        if (cliente.getEmpresa() != null) {
-            Empresa empresa = cliente.getEmpresa();
+        if (cliente.getEmpresa_cliente() != null) {
+            Empresa_cliente ec = cliente.getEmpresa_cliente();
+            Empresa e = ec.getEmpresa();
 
-            EmpresaDTO empresaDTO = EmpresaDTO.builder()
-                    .empresa_id(empresa.getEmpresa_id())
-                    .nombreEmpresa(empresa.getNombre())
-                    .dependenciaEmpresa(empresa.getDependencia())
-                    .telefonoOficinaEmpresa(empresa.getTelefonoOficina())
-                    .build();
-
-            builder.empresa(empresaDTO);
+            builder.empresa(
+                    EmpresaClienteDTO.builder()
+                            .empresaCliente_id(ec.getEmpresaCliente_id())
+                            .empresa(
+                                    EmpresaDTO.builder()
+                                            .empresa_id(e.getEmpresa_id())
+                                            .nombre(e.getNombre())
+                                            .build()
+                            )
+                            .dependencia(ec.getDependencia())
+                            .telefonoOficina(ec.getTelefonoOficina())
+                            .build()
+            );
         }
 
         return builder.build();
@@ -254,14 +261,21 @@ public class ClienteService {
                         .direccion(cliente.getDireccion())
                         .autos(autosDTO);
 
-        // ✅ MAPEO CORRECTO DE EMPRESA
-        if (cliente.getEmpresa() != null) {
+        if (cliente.getEmpresa_cliente() != null) {
+            Empresa_cliente ec = cliente.getEmpresa_cliente();
+            Empresa e = ec.getEmpresa();
+
             builder.empresa(
-                    EmpresaDTO.builder()
-                            .empresa_id(cliente.getEmpresa().getEmpresa_id())
-                            .nombreEmpresa(cliente.getEmpresa().getNombre())
-                            .dependenciaEmpresa(cliente.getEmpresa().getDependencia())
-                            .telefonoOficinaEmpresa(cliente.getEmpresa().getTelefonoOficina())
+                    EmpresaClienteDTO.builder()
+                            .empresaCliente_id(ec.getEmpresaCliente_id())
+                            .empresa(
+                                    EmpresaDTO.builder()
+                                            .empresa_id(e.getEmpresa_id())
+                                            .nombre(e.getNombre())
+                                            .build()
+                            )
+                            .dependencia(ec.getDependencia())
+                            .telefonoOficina(ec.getTelefonoOficina())
                             .build()
             );
         }
@@ -275,29 +289,31 @@ public class ClienteService {
             throw new RuntimeException("El ID del cliente es obligatorio");
         }
 
-        if (dto.getAuto() == null) {
+        if (dto.getAutos() == null || dto.getAutos().isEmpty()) {
             throw new RuntimeException("Los datos del auto son obligatorios");
         }
 
         Cliente cliente = clienteRepository.findById(dto.getCliente_id())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
-        Auto nuevoAuto = new Auto();
-        nuevoAuto.setMarca(dto.getAuto().getMarca());
-        nuevoAuto.setModelo(dto.getAuto().getModelo());
-        nuevoAuto.setAnio(dto.getAuto().getAnio());
-        nuevoAuto.setPlaca(dto.getAuto().getPlaca());
-        nuevoAuto.setColor(dto.getAuto().getColor());
-        nuevoAuto.setNumero_serie(dto.getAuto().getNumero_serie());
+        for (AutoDTO a : dto.getAutos()) {
+            Auto nuevoAuto = new Auto();
+            nuevoAuto.setMarca(a.getMarca());
+            nuevoAuto.setModelo(a.getModelo());
+            nuevoAuto.setAnio(a.getAnio());
+            nuevoAuto.setPlaca(a.getPlaca());
+            nuevoAuto.setColor(a.getColor());
+            nuevoAuto.setNumero_serie(a.getNumero_serie());
+            nuevoAuto.setCliente(cliente);
 
-
-        nuevoAuto.setCliente(cliente);
-        cliente.getAutos().add(nuevoAuto);
+            cliente.getAutos().add(nuevoAuto);
+        }
 
         Cliente clienteGuardado = clienteRepository.save(cliente);
 
         return convertirClienteConAutosDTO(clienteGuardado);
     }
+
     public ClienteConAutoDTO actualizarCliente(Long id, ModificarClienteDTO dto) {
 
         Cliente cliente = clienteRepository.findById(id)

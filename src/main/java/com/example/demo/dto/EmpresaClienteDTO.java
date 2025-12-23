@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmpresaDTO {
-    private Long empresa_id;
-    private String nombre;
+public class EmpresaClienteDTO {
+    private Long empresaCliente_id;
+    private EmpresaDTO empresa;
+    private String dependencia;
+    private String telefonoOficina;
 }

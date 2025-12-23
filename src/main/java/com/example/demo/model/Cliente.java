@@ -21,8 +21,8 @@ public class Cliente {
     private Long cliente_id;
 
     @ManyToOne
-    @JoinColumn(name = "empresa_id", nullable = true)
-    private Empresa empresa;
+    @JoinColumn(name = "empresaCliente_id", nullable = true)
+    private Empresa_cliente empresa_cliente;
 
     @Column(nullable = false, length = 50)
     private String nombre;

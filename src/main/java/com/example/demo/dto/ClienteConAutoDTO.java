@@ -18,8 +18,6 @@ public class ClienteConAutoDTO {
     private String celular;
     private String correo;
     private String direccion;
-    private EmpresaDTO empresa;
+    private EmpresaClienteDTO empresa;
     private List<AutoDTO> autos;
-    private AutoDTO auto;
-
 }
