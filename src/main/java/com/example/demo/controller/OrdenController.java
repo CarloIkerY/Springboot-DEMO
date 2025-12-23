@@ -166,4 +166,26 @@ public class OrdenController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
+
+    @GetMapping("/chofer/{choferId}")
+    public ResponseEntity<?> obtenerOrdenesAsignadasAChofer(@PathVariable Long choferId) {
+
+        List<Orden> ordenes = ordenService.obtenerOrdenesAsignadasAChofer(choferId);
+
+        return ResponseEntity.ok(Map.of(
+                "data", ordenes,
+                "message", "Órdenes asignadas al chofer obtenidas correctamente"
+        ));
+    }
+    @GetMapping("/mecanico/{mecanicoId}")
+    public ResponseEntity<?> obtenerOrdenesAsignadasAMecanico(@PathVariable Long mecanicoId) {
+
+        List<Orden> ordenes = ordenService.obtenerOrdenesAsignadasAMecanico(mecanicoId);
+
+        return ResponseEntity.ok(Map.of(
+                "data", ordenes,
+                "message", "Órdenes asignadas al mecánico obtenidas correctamente"
+        ));
+    }
+
 }

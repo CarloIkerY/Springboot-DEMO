@@ -171,5 +171,16 @@ public class OrdenService {
 
         // 8. Guardar cambios
         return ordenRepository.save(orden);
+
+
     }
+
+    public List<Orden> obtenerOrdenesAsignadasAChofer(Long choferId) {
+        return ordenRepository.findOrdenesAsignadasAChofer(choferId);
+    }
+
+    public List<Orden> obtenerOrdenesAsignadasAMecanico(Long mecanicoId) {
+        return ordenRepository.findOrdenesAsignadasAMecanico(mecanicoId);
+    }
+
 }

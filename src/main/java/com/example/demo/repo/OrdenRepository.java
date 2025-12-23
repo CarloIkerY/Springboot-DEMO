@@ -20,4 +20,37 @@ public interface OrdenRepository extends JpaRepository<Orden, Long> {
             AND s.estado.estado_id IN :ids
         """)
     List<Orden> findOrdenesPorEstadoActual(@Param("ids") List<Long> ids);
+
+
+@Query("""
+    SELECT o
+    FROM Orden o
+    JOIN o.ordenUsuarios ou
+    WHERE ou.usuario.usuario_id = :choferId
+      AND ou.fecha_asignacion = (
+          SELECT MAX(ou2.fecha_asignacion)
+          FROM OrdenUsuario ou2
+          WHERE ou2.orden = o
+            AND ou2.usuario.usuario_id = :choferId
+      )
+    ORDER BY ou.fecha_asignacion DESC
+""")
+    List<Orden> findOrdenesAsignadasAChofer(@Param("choferId") Long choferId);
+
+
+    @Query("""
+    SELECT o
+    FROM Orden o
+    JOIN o.ordenUsuarios ou
+    WHERE ou.usuario.usuario_id = :mecanicoId
+      AND ou.fecha_asignacion = (
+          SELECT MAX(ou2.fecha_asignacion)
+          FROM OrdenUsuario ou2
+          WHERE ou2.orden = o
+            AND ou2.usuario.usuario_id = :mecanicoId
+      )
+    ORDER BY ou.fecha_asignacion DESC
+""")
+    List<Orden> findOrdenesAsignadasAMecanico(@Param("mecanicoId") Long mecanicoId);
+
 }
