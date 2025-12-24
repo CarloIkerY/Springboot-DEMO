@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,9 +35,8 @@ public class Cotizacion {
     @Column(nullable = false)
     private String estatus;
 
-    @OneToMany(mappedBy = "cotizacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Evidencia> evidencias;
-
-    @OneToMany(mappedBy = "cotizacion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CotizacionDetalle> cotizacionesDetalle;
+    @OneToOne
+    @JoinColumn(name = "orden_id", nullable = false)
+    @JsonBackReference
+    private Orden orden;
 }

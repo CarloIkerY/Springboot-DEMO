@@ -6,22 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Ajuste")
+@Table(name = "Actividad")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Ajuste {
+public class Actividad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ajuste_id;
+    private Long actividad_id;
+
+    @ManyToOne
+    @JoinColumn(name = "subajuste_id", nullable = false)
+    private Subajuste subajuste;
 
     @Column(nullable = false)
     private String descripcion;
 
-    @OneToMany(mappedBy = "ajuste", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ajuste_auto> ajusteAutos;
+    @Column(nullable = false)
+    private LocalDateTime fecha_registro;
 }

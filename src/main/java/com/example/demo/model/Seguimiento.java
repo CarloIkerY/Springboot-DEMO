@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,8 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Seguimiento")
@@ -23,14 +23,10 @@ public class Seguimiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer seguimiento_id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "orden_id", nullable = false)
     @JsonBackReference
     private Orden orden;
-
-    @ManyToOne
-    @JoinColumn(name = "ajuste_id", nullable = true)
-    private Ajuste ajuste;
 
     @ManyToOne
     @JoinColumn(name = "estado_id", nullable = true)
@@ -39,4 +35,11 @@ public class Seguimiento {
 
     @Column(nullable = false)
     private LocalDateTime fecha_actualizacion;
+
+    @Column(nullable = true)
+    private Boolean ajustes_aceptados;
+
+    @OneToMany(mappedBy = "ajusteAuto_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Ajuste_auto> ajusteAutos = new ArrayList<>();
 }

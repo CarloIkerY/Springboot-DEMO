@@ -29,5 +29,5 @@ public class Proveedor {
     private String correo;
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Pieza> piezas;
+    private List<Pieza_subajuste> piezaSubajustes;
 }

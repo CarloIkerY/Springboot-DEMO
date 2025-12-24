@@ -50,7 +50,6 @@ public class Auto {
     private List<Orden> ordenes;
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cotizacion> cotizaciones;
-
-
+    @JsonIgnore
+    private List<Condicion_auto> condiciones;
 }

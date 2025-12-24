@@ -42,12 +42,19 @@ public class Orden {
     @Column(nullable = true)
     private LocalDateTime fecha_entrega;
 
-    @Builder.Default
+    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Seguimiento seguimiento;
+
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Seguimiento> seguimientos = new ArrayList<>();
+    private List<Evidencia> evidencia = new ArrayList<>();
 
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"orden"})
     private List<OrdenUsuario> ordenUsuarios = new ArrayList<>();
+
+    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Cotizacion cotizacion;
 }

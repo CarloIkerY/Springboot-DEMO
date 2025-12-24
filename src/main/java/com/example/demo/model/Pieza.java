@@ -19,10 +19,6 @@ public class Pieza {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pieza_id;
 
-    @ManyToOne
-    @JoinColumn(name = "proveedor_id", nullable = true)
-    private Proveedor proveedor;
-
     @Column(nullable = false)
     private String nombre;
 
@@ -30,5 +26,5 @@ public class Pieza {
     private Double costo_unitario;
 
     @OneToMany(mappedBy = "pieza", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PiezaAjuste> piezasAjuste;
+    private List<Pieza_subajuste> piezaSubajustes;
 }

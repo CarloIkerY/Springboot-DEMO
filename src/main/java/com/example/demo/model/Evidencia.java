@@ -17,11 +17,11 @@ import java.time.LocalDate;
 public class Evidencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer evidencia_id;
+    private Long evidencia_id;
 
     @ManyToOne
-    @JoinColumn(name = "cotizacion_id", nullable = false)
-    private Cotizacion cotizacion;
+    @JoinColumn(name = "orden_id", nullable = false)
+    private Orden orden;
 
     @Column(nullable = false)
     private String tipo;

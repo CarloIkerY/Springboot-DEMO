@@ -31,7 +31,7 @@ public class OrdenService {
         Estado estado = estadoRepository.findById(dto.getEstado())
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
 
-        // Crear la orden
+        // 1️⃣ Crear la orden
         Orden orden = Orden.builder()
                 .auto(auto)
                 .numero_orden(generarNumeroOrden())
@@ -39,16 +39,17 @@ public class OrdenService {
                 .ordenUsuarios(new ArrayList<>())
                 .build();
 
-        // Crear el seguimiento inicial
+        // 2️⃣ Crear seguimiento inicial
         Seguimiento seguimiento = Seguimiento.builder()
-                .orden(orden)
+                .orden(orden) // lado dueño
                 .estado(estado)
                 .fecha_actualizacion(LocalDateTime.now())
                 .build();
 
-        // Relación bidireccional
-        orden.getSeguimientos().add(seguimiento);
+        // 3️⃣ Relación bidireccional (1–1)
+        orden.setSeguimiento(seguimiento);
 
+        // 4️⃣ Guardar
         return ordenRepository.save(orden);
     }
 
@@ -62,71 +63,77 @@ public class OrdenService {
 
     public Orden asignarOrden(OrdenDTO dto) {
 
-        // Obtener orden
+        // 1️⃣ Obtener orden
         Orden orden = ordenRepository.findById(dto.getOrden_id())
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-        // Obtener seguimiento del día
-        Seguimiento seguimientoHoy = orden.getSeguimientos().stream()
-                .filter(s -> s.getFecha_actualizacion().toLocalDate().isEqual(LocalDate.now()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No existe un seguimiento para hoy"));
-
-        Estado estadoActual = seguimientoHoy.getEstado();
-
-        if (estadoActual == null || estadoActual.getEstado_id() == null) {
-            throw new RuntimeException("El seguimiento no tiene un estado asignado.");
+        // 2️⃣ Obtener seguimiento (1–1)
+        Seguimiento seguimiento = orden.getSeguimiento();
+        if (seguimiento == null) {
+            throw new RuntimeException("La orden no tiene seguimiento asignado");
         }
 
-        // Obtener usuario a asignar
+        Estado estadoActual = seguimiento.getEstado();
+        if (estadoActual == null || estadoActual.getEstado_id() == null) {
+            throw new RuntimeException("El seguimiento no tiene un estado asignado");
+        }
+
+        // 3️⃣ Obtener usuario
         Usuario usuario = usuarioRepository.findById(dto.getUsuario_id())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Actualizar estado según el rol del usuario
+        // 4️⃣ Determinar nuevo estado
         Estado estadoAsignado;
 
         if (usuario.getRol().getRol_id() == 2) {
             estadoAsignado = estadoRepository.findById(2L)
                     .orElseThrow(() -> new RuntimeException("Estado 2 no encontrado"));
+
         } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() < 5) {
             estadoAsignado = estadoRepository.findById(5L)
-                    .orElseThrow(() -> new RuntimeException("Estado 4 no encontrado"));
+                    .orElseThrow(() -> new RuntimeException("Estado 5 no encontrado"));
+
         } else if (usuario.getRol().getRol_id() == 3 && estadoActual.getEstado_id() >= 5) {
             estadoAsignado = estadoActual;
+
         } else {
             throw new RuntimeException("El rol del usuario no es válido para asignación.");
         }
 
-        // Actualizar el seguimiento del día
-        seguimientoHoy.setEstado(estadoAsignado);
+        // 5️⃣ Actualizar seguimiento (estado actual)
+        seguimiento.setEstado(estadoAsignado);
+        seguimiento.setFecha_actualizacion(LocalDateTime.now());
 
-        // CREAR nueva asignación (historial)
+        // 6️⃣ Registrar asignación (historial)
         OrdenUsuario asignacion = new OrdenUsuario();
         asignacion.setOrden(orden);
         asignacion.setUsuario(usuario);
         asignacion.setFecha_asignacion(LocalDate.now());
 
-        // Relación bidireccional
         orden.getOrdenUsuarios().add(asignacion);
 
+        // 7️⃣ Guardar
         return ordenRepository.save(orden);
     }
 
     public Orden agendarFechaRecoleccion(OrdenDTO dto) {
+
         Orden orden = ordenRepository.findById(dto.getOrden_id())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Orden no encontrada"
                 ));
 
-        Seguimiento seguimientoHoy = orden.getSeguimientos().stream()
-                .filter(s -> s.getFecha_actualizacion().toLocalDate().isEqual(LocalDate.now()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No existe un seguimiento para hoy"));
+        Seguimiento seguimiento = orden.getSeguimiento();
+        if (seguimiento == null) {
+            throw new RuntimeException("La orden no tiene seguimiento asignado");
+        }
 
         Estado estadoAsignado = estadoRepository.findById(3L)
                 .orElseThrow(() -> new RuntimeException("Estado 3 no encontrado"));
 
-        seguimientoHoy.setEstado(estadoAsignado);
+        // Actualizar estado y fecha
+        seguimiento.setEstado(estadoAsignado);
+        seguimiento.setFecha_actualizacion(LocalDateTime.now());
 
         orden.setFecha_recoleccion(dto.getFecha_recoleccion());
 
@@ -135,44 +142,44 @@ public class OrdenService {
 
     public Orden cambiarEstado(OrdenDTO dto) {
 
-        // 1. Obtener la orden
+        // 1️⃣ Obtener la orden
         Orden orden = ordenRepository.findById(dto.getOrden_id())
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-        // 2. Obtener el usuario
+        // 2️⃣ Obtener el usuario
         Usuario usuario = usuarioRepository.findById(dto.getUsuario_id())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // 3. Validar si es GERENTE (rol_id = 4)
+        // 3️⃣ Validar rol GERENTE (rol_id = 4)
         if (usuario.getRol().getRol_id() != 4) {
-            throw new RuntimeException("Solo un usuario GERENTE puede cambiar el estado manualmente.");
+            throw new RuntimeException(
+                    "Solo un usuario GERENTE puede cambiar el estado manualmente."
+            );
         }
 
-        // 4. Obtener el seguimiento más reciente (última actualización)
-        Seguimiento seguimientoActual = orden.getSeguimientos().stream()
-                .sorted(Comparator.comparing(Seguimiento::getFecha_actualizacion).reversed())
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("La orden no tiene seguimientos."));
+        // 4️⃣ Obtener seguimiento (1–1)
+        Seguimiento seguimiento = orden.getSeguimiento();
+        if (seguimiento == null) {
+            throw new RuntimeException("La orden no tiene seguimiento asignado.");
+        }
 
-        // 5. Obtener el estado nuevo por ID
+        // 5️⃣ Obtener nuevo estado
         Estado nuevoEstado = estadoRepository.findById(dto.getEstado())
                 .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
 
-        // 6. Actualizar estado del seguimiento más reciente
-        seguimientoActual.setEstado(nuevoEstado);
-        seguimientoActual.setFecha_actualizacion(LocalDateTime.now());
+        // 6️⃣ Actualizar seguimiento
+        seguimiento.setEstado(nuevoEstado);
+        seguimiento.setFecha_actualizacion(LocalDateTime.now());
 
-        // 7. Registrar un historial de asignación (opcional pero profesional)
+        // 7️⃣ Registrar historial de asignación (opcional)
         OrdenUsuario asignacion = new OrdenUsuario();
         asignacion.setOrden(orden);
         asignacion.setUsuario(usuario);
         asignacion.setFecha_asignacion(LocalDate.now());
         orden.getOrdenUsuarios().add(asignacion);
 
-        // 8. Guardar cambios
+        // 8️⃣ Guardar
         return ordenRepository.save(orden);
-
-
     }
 
     public List<Orden> obtenerOrdenesAsignadasAChofer(Long choferId) {

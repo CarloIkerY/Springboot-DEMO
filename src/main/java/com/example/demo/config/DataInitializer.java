@@ -261,7 +261,6 @@ public class DataInitializer {
                         Pieza.builder()
                                 .nombre(nombre)
                                 .costo_unitario(0.0)
-                                .proveedor(null) //
                                 .build()
                 );
             });

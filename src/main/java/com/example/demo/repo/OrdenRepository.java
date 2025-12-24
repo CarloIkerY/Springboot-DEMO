@@ -8,49 +8,49 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface OrdenRepository extends JpaRepository<Orden, Long> {
-    @Query(
-        """
-            SELECT o FROM Orden o
-            JOIN o.seguimientos s
-            WHERE s.seguimiento_id = (
-                SELECT MAX(s2.seguimiento_id)
-                FROM Seguimiento s2
-                WHERE s2.orden = o
-            )
-            AND s.estado.estado_id IN :ids
-        """)
+
+    // 🔹 ORDENES POR ESTADO ACTUAL (Seguimiento 1–1)
+    @Query("""
+        SELECT o
+        FROM Orden o
+        JOIN o.seguimiento s
+        WHERE s.estado.estado_id IN :ids
+    """)
     List<Orden> findOrdenesPorEstadoActual(@Param("ids") List<Long> ids);
 
 
-@Query("""
-    SELECT o
-    FROM Orden o
-    JOIN o.ordenUsuarios ou
-    WHERE ou.usuario.usuario_id = :choferId
-      AND ou.fecha_asignacion = (
-          SELECT MAX(ou2.fecha_asignacion)
-          FROM OrdenUsuario ou2
-          WHERE ou2.orden = o
-            AND ou2.usuario.usuario_id = :choferId
-      )
-    ORDER BY ou.fecha_asignacion DESC
-""")
+    // 🔹 ORDENES ASIGNADAS A CHOFER (última asignación)
+    @Query("""
+        SELECT o
+        FROM Orden o
+        JOIN o.ordenUsuarios ou
+        WHERE ou.usuario.usuario_id = :choferId
+          AND ou.fecha_asignacion = (
+              SELECT MAX(ou2.fecha_asignacion)
+              FROM OrdenUsuario ou2
+              WHERE ou2.orden = o
+                AND ou2.usuario.usuario_id = :choferId
+          )
+        ORDER BY ou.fecha_asignacion DESC
+    """)
     List<Orden> findOrdenesAsignadasAChofer(@Param("choferId") Long choferId);
 
 
+    // 🔹 ORDENES ASIGNADAS A MECÁNICO (última asignación)
     @Query("""
-    SELECT o
-    FROM Orden o
-    JOIN o.ordenUsuarios ou
-    WHERE ou.usuario.usuario_id = :mecanicoId
-      AND ou.fecha_asignacion = (
-          SELECT MAX(ou2.fecha_asignacion)
-          FROM OrdenUsuario ou2
-          WHERE ou2.orden = o
-            AND ou2.usuario.usuario_id = :mecanicoId
-      )
-    ORDER BY ou.fecha_asignacion DESC
-""")
+        SELECT o
+        FROM Orden o
+        JOIN o.ordenUsuarios ou
+        WHERE ou.usuario.usuario_id = :mecanicoId
+          AND ou.fecha_asignacion = (
+              SELECT MAX(ou2.fecha_asignacion)
+              FROM OrdenUsuario ou2
+              WHERE ou2.orden = o
+                AND ou2.usuario.usuario_id = :mecanicoId
+          )
+        ORDER BY ou.fecha_asignacion DESC
+    """)
     List<Orden> findOrdenesAsignadasAMecanico(@Param("mecanicoId") Long mecanicoId);
 
 }
+
