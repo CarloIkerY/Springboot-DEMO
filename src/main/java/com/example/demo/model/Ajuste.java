@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +24,6 @@ public class Ajuste {
     private String descripcion;
 
     @OneToMany(mappedBy = "ajuste", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Ajuste_auto> ajusteAutos;
 }

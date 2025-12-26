@@ -28,7 +28,7 @@ public class Ajuste_auto {
     @JoinColumn(name = "seguimiento_id", nullable = false)
     private Seguimiento seguimiento;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String descripcion;
 
     @Column(nullable = false)
