@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class Ajuste_auto {
 
     @ManyToOne
     @JoinColumn(name = "ajuste_id", nullable = false)
+    @JsonBackReference
     private Ajuste ajuste;
 
     @ManyToOne

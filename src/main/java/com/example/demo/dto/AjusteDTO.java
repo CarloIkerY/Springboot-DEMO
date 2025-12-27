@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AjusteDTO {
-    private Long ajuste_id;
     private String descripcion;
 }

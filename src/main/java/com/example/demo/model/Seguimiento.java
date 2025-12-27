@@ -40,8 +40,7 @@ public class Seguimiento {
     @Column(nullable = true)
     private Boolean ajustes_aceptados;
 
-    @OneToMany(mappedBy = "ajusteAuto_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "seguimiento", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    @JsonIgnore
     private List<Ajuste_auto> ajusteAutos = new ArrayList<>();
 }

@@ -630,10 +630,6 @@ public class DataInitializer {
                     .build());
 
             estadoRepository.save(Estado.builder()
-                    .estado("En transito")
-                    .build());
-
-            estadoRepository.save(Estado.builder()
                     .estado("En taller - pendiente revisión")
                     .build());
 

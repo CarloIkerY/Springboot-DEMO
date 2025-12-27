@@ -52,5 +52,13 @@ public interface OrdenRepository extends JpaRepository<Orden, Long> {
     """)
     List<Orden> findOrdenesAsignadasAMecanico(@Param("mecanicoId") Long mecanicoId);
 
+    @Query("""
+        SELECT DISTINCT o
+        FROM Orden o
+        JOIN o.seguimiento s
+        LEFT JOIN s.ajusteAutos aa
+        WHERE s.estado.estado_id = :estadoId
+    """)
+    List<Orden> findOrdenesConAjustesPorEstado(@Param("estadoId") Long estadoId);
 }
 

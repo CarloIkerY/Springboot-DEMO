@@ -1,14 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AjusteAutoDTO;
 import com.example.demo.dto.AjusteDTO;
-import com.example.demo.model.Ajuste;
-import com.example.demo.model.Ajuste_auto;
-import com.example.demo.model.Seguimiento;
-import com.example.demo.repo.AjusteAutoRepository;
-import com.example.demo.repo.AjusteRepository;
-import com.example.demo.repo.SeguimientoRepository;
-import jakarta.transaction.Transactional;
+import com.example.demo.dto.response.OrdenResponseDTO;
+import com.example.demo.mappers.OrdenMapper;
+import com.example.demo.model.*;
+import com.example.demo.repo.*;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +21,26 @@ public class AjusteService {
     private final AjusteRepository ajusteRepository;
     private final AjusteAutoRepository ajusteAutoRepository;
     private final SeguimientoRepository seguimientoRepository;
+    private final EstadoRepository estadoRepository;
+    private final OrdenRepository ordenRepository;
+    private final OrdenMapper ordenMapper;
 
     @Transactional
-    public List<Ajuste_auto> crearAjustes(Long ordenId, List<AjusteDTO> ajustes) {
+    public OrdenResponseDTO crearAjustes(Long ordenId, List<AjusteDTO> ajustes) {
 
+        // 1️⃣ Obtener seguimiento
         Seguimiento seguimiento = seguimientoRepository
                 .findByOrdenId(ordenId)
                 .orElseThrow(() -> new RuntimeException("Seguimiento no encontrado"));
 
-        List<Ajuste_auto> creados = new ArrayList<>();
+        // 2️⃣ Cambiar estado a 7
+        Estado estado7 = estadoRepository.findById(7L)
+                .orElseThrow(() -> new RuntimeException("Estado 7 no encontrado"));
 
+        seguimiento.setEstado(estado7);
+        seguimiento.setFecha_actualizacion(LocalDateTime.now());
+
+        // 3️⃣ Crear ajustes
         for (AjusteDTO dto : ajustes) {
 
             Ajuste ajuste = ajusteRepository
@@ -50,9 +57,21 @@ public class AjusteService {
             ajusteAuto.setDescripcion(dto.getDescripcion());
             ajusteAuto.setFecha_creacion(LocalDateTime.now());
 
-            creados.add(ajusteAutoRepository.save(ajusteAuto));
+            ajusteAutoRepository.save(ajusteAuto);
         }
 
-        return creados;
+        // 4️⃣ Obtener la orden completa y mapearla
+        Orden orden = ordenRepository.findById(ordenId)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        return ordenMapper.toDto(orden);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrdenResponseDTO> obtenerAjustesPendientes() {
+        return ordenRepository.findOrdenesConAjustesPorEstado(7L)
+                .stream()
+                .map(ordenMapper::toDto)
+                .toList();
     }
 }
