@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AjusteDTO;
+import com.example.demo.dto.request.AjusteAutoUpdateRequestDTO;
+import com.example.demo.dto.response.AjusteAutoResponseDTO;
 import com.example.demo.dto.response.OrdenResponseDTO;
+import com.example.demo.mappers.AjusteAutoMapper;
 import com.example.demo.mappers.OrdenMapper;
 import com.example.demo.model.*;
 import com.example.demo.repo.*;
@@ -24,23 +27,21 @@ public class AjusteService {
     private final EstadoRepository estadoRepository;
     private final OrdenRepository ordenRepository;
     private final OrdenMapper ordenMapper;
+    private final AjusteAutoMapper ajusteAutoMapper;
 
     @Transactional
     public OrdenResponseDTO crearAjustes(Long ordenId, List<AjusteDTO> ajustes) {
 
-        // 1️⃣ Obtener seguimiento
         Seguimiento seguimiento = seguimientoRepository
                 .findByOrdenId(ordenId)
                 .orElseThrow(() -> new RuntimeException("Seguimiento no encontrado"));
 
-        // 2️⃣ Cambiar estado a 7
         Estado estado7 = estadoRepository.findById(7L)
                 .orElseThrow(() -> new RuntimeException("Estado 7 no encontrado"));
 
         seguimiento.setEstado(estado7);
         seguimiento.setFecha_actualizacion(LocalDateTime.now());
 
-        // 3️⃣ Crear ajustes
         for (AjusteDTO dto : ajustes) {
 
             Ajuste ajuste = ajusteRepository
@@ -60,7 +61,6 @@ public class AjusteService {
             ajusteAutoRepository.save(ajusteAuto);
         }
 
-        // 4️⃣ Obtener la orden completa y mapearla
         Orden orden = ordenRepository.findById(ordenId)
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
@@ -73,5 +73,47 @@ public class AjusteService {
                 .stream()
                 .map(ordenMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    public AjusteAutoResponseDTO actualizarAjuste(AjusteAutoUpdateRequestDTO dto) {
+
+        Ajuste_auto ajusteAuto = ajusteAutoRepository
+                .findById(dto.getAjusteAuto_id())
+                .orElseThrow(() -> new RuntimeException("Ajuste no encontrado"));
+
+        Seguimiento seguimiento = ajusteAuto.getSeguimiento();
+
+        if (!seguimiento.getOrden().getOrden_id().equals(dto.getOrden_id())) {
+            throw new RuntimeException("El ajuste no pertenece a la orden indicada");
+        }
+
+        if (Boolean.TRUE.equals(seguimiento.getAjustes_aceptados())) {
+            throw new RuntimeException(
+                    "No se puede modificar el ajuste porque ya fue aceptado"
+            );
+        }
+
+        Ajuste ajuste = ajusteRepository
+                .findByDescripcionIgnoreCase(dto.getDescripcion())
+                .orElseGet(() -> {
+                    Ajuste nuevo = new Ajuste();
+                    nuevo.setDescripcion(dto.getDescripcion());
+                    return ajusteRepository.save(nuevo);
+                });
+
+        ajusteAuto.setAjuste(ajuste);
+
+        ajusteAutoMapper.updateEntityFromDto(dto, ajusteAuto);
+
+        Estado estado7 = estadoRepository.findById(7L)
+                .orElseThrow(() -> new RuntimeException("Estado 7 no encontrado"));
+
+        seguimiento.setEstado(estado7);
+        seguimiento.setFecha_actualizacion(LocalDateTime.now());
+
+        Ajuste_auto saved = ajusteAutoRepository.save(ajusteAuto);
+
+        return ajusteAutoMapper.toDto(saved);
     }
 }

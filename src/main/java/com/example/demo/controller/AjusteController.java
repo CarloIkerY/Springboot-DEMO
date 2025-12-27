@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.AjusteAutoRequestDTO;
+import com.example.demo.dto.request.AjusteAutoUpdateRequestDTO;
+import com.example.demo.dto.response.AjusteAutoResponseDTO;
 import com.example.demo.dto.response.OrdenResponseDTO;
 import com.example.demo.service.AjusteService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,6 @@ public class AjusteController {
 
         Map<String, Object> response = new HashMap<>();
 
-        // Validaciones
         if (dto.getOrden_id() == null) {
             response.put("message", "La orden es obligatoria.");
             response.put("data", null);
@@ -37,7 +38,6 @@ public class AjusteController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        // ✅ AQUÍ ESTÁ LA CORRECCIÓN
         OrdenResponseDTO result =
                 ajusteService.crearAjustes(dto.getOrden_id(), dto.getAjustes());
 
@@ -58,6 +58,32 @@ public class AjusteController {
 
         response.put("message", "Órdenes con ajustes pendientes obtenidas correctamente");
         response.put("data", ordenes);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/actualizarAjusteAuto")
+    public ResponseEntity<?> actualizarAjuste(@RequestBody AjusteAutoUpdateRequestDTO dto) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (dto.getAjusteAuto_id() == null) {
+            response.put("message", "El ajusteAuto_id es obligatorio.");
+            response.put("data", null);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (dto.getDescripcion() == null || dto.getDescripcion().isBlank()) {
+            response.put("message", "La descripción es obligatoria.");
+            response.put("data", null);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        AjusteAutoResponseDTO result =
+                ajusteService.actualizarAjuste(dto);
+
+        response.put("message", "Ajuste actualizado correctamente.");
+        response.put("data", result);
 
         return ResponseEntity.ok(response);
     }
