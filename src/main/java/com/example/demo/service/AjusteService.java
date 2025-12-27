@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AjusteDTO;
+import com.example.demo.dto.request.AceptarAjustesRequestDTO;
 import com.example.demo.dto.request.AjusteAutoUpdateRequestDTO;
 import com.example.demo.dto.response.AjusteAutoResponseDTO;
 import com.example.demo.dto.response.OrdenResponseDTO;
@@ -115,5 +116,34 @@ public class AjusteService {
         Ajuste_auto saved = ajusteAutoRepository.save(ajusteAuto);
 
         return ajusteAutoMapper.toDto(saved);
+    }
+
+    @Transactional
+    public OrdenResponseDTO aceptarAjustes(AceptarAjustesRequestDTO dto) {
+
+        Orden orden = ordenRepository.findById(dto.getOrden_id())
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        Seguimiento seguimiento = orden.getSeguimiento();
+
+        if (seguimiento == null) {
+            throw new RuntimeException("La orden no tiene seguimiento");
+        }
+
+        seguimiento.setAjustes_aceptados(dto.getAjustes_aceptados());
+
+        Long estadoId = Boolean.TRUE.equals(dto.getAjustes_aceptados())
+                ? 8L
+                : 6L;
+
+        Estado nuevoEstado = estadoRepository.findById(estadoId)
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+
+        seguimiento.setEstado(nuevoEstado);
+        seguimiento.setFecha_actualizacion(LocalDateTime.now());
+
+        Orden saved = ordenRepository.save(orden);
+
+        return ordenMapper.toDto(saved);
     }
 }

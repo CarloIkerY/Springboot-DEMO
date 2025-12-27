@@ -10,6 +10,7 @@ public class SeguimientoDTO {
     private Integer seguimiento_id;
     private EstadoDTO estado;
     private LocalDateTime fechaActualizacion;
+    private Boolean ajustes_aceptados;
 
     private List<AjusteAutoDTO> ajustes;
 }

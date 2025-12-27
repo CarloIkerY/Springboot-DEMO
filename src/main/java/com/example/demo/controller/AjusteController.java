@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.AceptarAjustesRequestDTO;
 import com.example.demo.dto.request.AjusteAutoRequestDTO;
 import com.example.demo.dto.request.AjusteAutoUpdateRequestDTO;
 import com.example.demo.dto.response.AjusteAutoResponseDTO;
@@ -83,6 +84,34 @@ public class AjusteController {
                 ajusteService.actualizarAjuste(dto);
 
         response.put("message", "Ajuste actualizado correctamente.");
+        response.put("data", result);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/aceptarAjustes")
+    public ResponseEntity<?> aceptarAjustes(
+            @RequestBody AceptarAjustesRequestDTO dto) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Validaciones básicas
+        if (dto.getOrden_id() == null) {
+            response.put("message", "La orden es obligatoria.");
+            response.put("data", null);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (dto.getAjustes_aceptados() == null) {
+            response.put("message", "Debe indicar si los ajustes fueron aceptados.");
+            response.put("data", null);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Llamar al servicio
+        OrdenResponseDTO result = ajusteService.aceptarAjustes(dto);
+
+        response.put("message", "Estado de ajustes actualizado correctamente.");
         response.put("data", result);
 
         return ResponseEntity.ok(response);

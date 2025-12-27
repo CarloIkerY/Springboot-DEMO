@@ -642,11 +642,15 @@ public class DataInitializer {
                     .build());
 
             estadoRepository.save(Estado.builder()
-                    .estado("Pendiente aprobación")
+                    .estado("Diagnostico enviado")
                     .build());
 
             estadoRepository.save(Estado.builder()
                     .estado("En reparación")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente aprobación")
                     .build());
 
             estadoRepository.save(Estado.builder()
