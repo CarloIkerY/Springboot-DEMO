@@ -3,6 +3,7 @@ package com.example.demo.dto.response;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class AjusteAutoDTO {
@@ -11,4 +12,5 @@ public class AjusteAutoDTO {
     private LocalDateTime fechaCreacion;
 
     private AjusteSimpleDTO ajuste;
+    private List<SubajusteDTO> subajustes;
 }

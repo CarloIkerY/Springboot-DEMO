@@ -3,6 +3,7 @@ package com.example.demo.dto.response;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class AjusteAutoResponseDTO {
@@ -19,4 +20,6 @@ public class AjusteAutoResponseDTO {
     private Integer seguimiento_id;
     private Long estadoId;
     private String estado;
+
+    private List<SubajusteDTO> subajustes;
 }

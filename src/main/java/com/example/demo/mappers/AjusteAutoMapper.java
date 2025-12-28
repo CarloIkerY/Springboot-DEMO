@@ -8,11 +8,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { SubajusteMapper.class })
 public interface AjusteAutoMapper {
 
     @Mapping(source = "ajusteAuto_id", target = "ajusteAuto_id")
     @Mapping(source = "fecha_creacion", target = "fechaCreacion")
+    @Mapping(source = "subajustes", target = "subajustes")
 
     // Ajuste
     @Mapping(source = "ajuste.ajuste_id", target = "ajuste_id")
@@ -24,7 +25,6 @@ public interface AjusteAutoMapper {
     @Mapping(source = "seguimiento.estado.estado", target = "estado")
     AjusteAutoResponseDTO toDto(Ajuste_auto entity);
 
-    // Para actualizar SOLO campos simples
     @Mapping(target = "ajusteAuto_id", ignore = true)
     @Mapping(target = "seguimiento", ignore = true)
     @Mapping(target = "ajuste", ignore = true)

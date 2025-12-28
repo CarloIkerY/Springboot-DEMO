@@ -10,5 +10,6 @@ public interface OrdenMapper {
     @Mapping(source = "orden_id", target = "orden_id")
     @Mapping(source = "numero_orden", target = "numeroOrden")
     @Mapping(source = "fecha_creacion", target = "fechaCreacion")
+    @Mapping(source = "seguimiento", target = "seguimiento")
     OrdenResponseDTO toDto(Orden orden);
 }

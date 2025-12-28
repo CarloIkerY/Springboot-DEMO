@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 public interface SeguimientoMapper {
 
     @Mapping(source = "seguimiento_id", target = "seguimiento_id")
+    @Mapping(source = "estado", target = "estado")
     @Mapping(source = "fecha_actualizacion", target = "fechaActualizacion")
     @Mapping(source = "ajustes_aceptados", target = "ajustes_aceptados")
     @Mapping(source = "ajusteAutos", target = "ajustes")

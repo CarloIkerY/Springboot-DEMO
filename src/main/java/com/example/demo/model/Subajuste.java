@@ -19,7 +19,7 @@ import java.util.List;
 public class Subajuste {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer subajuste_id;
+    private Long subajuste_id;
 
     @ManyToOne
     @JoinColumn(name = "ajusteAuto_id", nullable = false)
