@@ -1,13 +1,23 @@
 package com.example.demo.repo;
 
 import com.example.demo.model.Orden;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrdenRepository extends JpaRepository<Orden, Long> {
+
+    @Query("SELECT o FROM Orden o " +
+            "JOIN FETCH o.seguimiento s " +
+            "JOIN FETCH s.ajusteAutos a " +
+            "JOIN FETCH a.subajustes sub " +
+            "LEFT JOIN FETCH sub.actividades " +
+            "WHERE o.orden_id = :id")
+    Optional<Orden> findByIdWithAllRelations(@Param("id") Long id);
 
     // 🔹 ORDENES POR ESTADO ACTUAL (Seguimiento 1–1)
     @Query("""

@@ -2,20 +2,20 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Ajuste_auto")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class Ajuste_auto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,5 +40,18 @@ public class Ajuste_auto {
     private LocalDateTime fecha_finalizado;
 
     @OneToMany(mappedBy = "ajusteAuto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Subajuste> subajustes;
+    private Set<Subajuste> subajustes = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ajuste_auto)) return false;
+        Ajuste_auto that = (Ajuste_auto) o;
+        return ajusteAuto_id != null && ajusteAuto_id.equals(that.ajusteAuto_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
