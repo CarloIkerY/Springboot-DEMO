@@ -39,4 +39,19 @@ public class Pieza_subajuste {
 
     @Column(nullable = true)
     private Date fecha_recibido;
+
+    @Column(name = "costo_unitario_compra", nullable = false)
+    private Double costo_unitario_compra;
+
+    @Column(name = "subtotal", nullable = false)
+    private Double subtotal;
+
+    @PrePersist
+    public void prePersist() {
+        if (fecha_solicitud == null) fecha_solicitud = new java.util.Date();
+        if (subtotal == null && cantidad != null && costo_unitario_compra != null) {
+            subtotal = cantidad.doubleValue() * costo_unitario_compra;
+        }
+    }
+
 }
