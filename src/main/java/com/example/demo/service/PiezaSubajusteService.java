@@ -1,81 +1,71 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AgregarPiezasSubajusteBatchRequest;
-import com.example.demo.dto.PiezaSubajusteResponseDTO;
-import com.example.demo.dto.response.PiezaSubajusteBatchResponseDTO;
-import com.example.demo.mappers.PiezaSubajusteMapper;
+import com.example.demo.dto.request.AgregarPiezaSubajusteRequestDTO;
 import com.example.demo.model.*;
 import com.example.demo.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class PiezaSubajusteService {
 
-    private final OrdenRepository ordenRepository;
-    private final SubajusteRepository subajusteRepository;
+    private final PiezaSubajusteRepository piezaSubajusteRepository;
+    private final PiezaProveedorPrecioRepository piezaProveedorPrecioRepository;
+
     private final PiezaRepository piezaRepository;
     private final ProveedorRepository proveedorRepository;
-    private final PiezaSubajusteRepository piezaSubajusteRepository;
-
-    private final PiezaSubajusteMapper piezaSubajusteMapper;
+    private final SubajusteRepository subajusteRepository;
+    private final OrdenRepository ordenRepository;
 
     @Transactional
-    public PiezaSubajusteBatchResponseDTO agregarBatch(AgregarPiezasSubajusteBatchRequest req) {
+    public Pieza_subajuste agregarPiezaProveedorAOrden(AgregarPiezaSubajusteRequestDTO req) {
 
-        Orden orden = ordenRepository.findByIdWithAllRelations(req.getOrdenId())
-                .orElseThrow(() -> new RuntimeException("Orden no encontrada: " + req.getOrdenId()));
+        Proveedor proveedor = proveedorRepository.findById(req.getProveedorId())
+                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado: " + req.getProveedorId()));
+
+        Pieza pieza = piezaRepository.findById(req.getPiezaId())
+                .orElseThrow(() -> new RuntimeException("Pieza no encontrada: " + req.getPiezaId()));
 
         Subajuste subajuste = subajusteRepository.findById(req.getSubajusteId())
                 .orElseThrow(() -> new RuntimeException("Subajuste no encontrado: " + req.getSubajusteId()));
 
-        // Validación subajuste pertenezca a la orden
-        boolean pertenece = orden.getSeguimiento().getAjusteAutos().stream()
-                .flatMap(a -> a.getSubajustes().stream())
-                .anyMatch(s -> s.getSubajuste_id().equals(subajuste.getSubajuste_id()));
-        if (!pertenece) {
-            throw new RuntimeException("El subajuste " + subajuste.getSubajuste_id() + " no pertenece a la orden " + orden.getOrden_id());
+        Orden orden = ordenRepository.findById(req.getOrdenId())
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada: " + req.getOrdenId()));
+
+        // ✅ Validación real: subajuste -> ajusteAuto -> seguimiento -> orden
+        if (subajuste.getAjusteAuto() == null ||
+                subajuste.getAjusteAuto().getSeguimiento() == null ||
+                subajuste.getAjusteAuto().getSeguimiento().getOrden() == null ||
+                !subajuste.getAjusteAuto().getSeguimiento().getOrden().getOrden_id().equals(orden.getOrden_id())
+        ) {
+            throw new RuntimeException("El subajuste " + req.getSubajusteId()
+                    + " NO pertenece a la orden " + req.getOrdenId());
         }
 
-        List<PiezaSubajusteResponseDTO> out = new ArrayList<>();
-
-        for (var item : req.getItems()) {
-            Proveedor proveedor = proveedorRepository.findById(item.getProveedorId())
-                    .orElseThrow(() -> new RuntimeException("Proveedor no encontrado: " + item.getProveedorId()));
-
-            Pieza pieza = piezaRepository.findById(item.getPiezaId())
-                    .orElseThrow(() -> new RuntimeException("Pieza no encontrada: " + item.getPiezaId()));
-
-            Pieza_subajuste entity = Pieza_subajuste.builder()
-                    .subajuste(subajuste)
-                    .proveedor(proveedor)
-                    .pieza(pieza)
-                    .cantidad(item.getCantidad())
-                    .fecha_solicitud(new Date())
-                    .costo_unitario_compra(item.getCostoUnitario())
-                    .subtotal(item.getCantidad() * item.getCostoUnitario())
-                    .build();
-
-            entity = piezaSubajusteRepository.save(entity);
-
-            PiezaSubajusteResponseDTO dto = piezaSubajusteMapper.toDto(entity);
-
-            dto.setOrdenId(req.getOrdenId());
-
-            out.add(dto);
-        }
-
-        return PiezaSubajusteBatchResponseDTO.builder()
-                .ordenId(req.getOrdenId())
-                .subajusteId(req.getSubajusteId())
-                .piezas(out)
+        Pieza_subajuste ps = Pieza_subajuste.builder()
+                .subajuste(subajuste)
+                .pieza(pieza)
+                .proveedor(proveedor)
+                .cantidad(req.getCantidad())
+                .fecha_recibido(null)
+                .costo_unitario_compra(req.getCostoUnitario())
+                // subtotal y fecha_solicitud se calculan en @PrePersist
                 .build();
 
+        ps = piezaSubajusteRepository.save(ps);
+
+        PiezaProveedorPrecio hist = PiezaProveedorPrecio.builder()
+                .pieza(pieza)
+                .proveedor(proveedor)
+                .cantidad(req.getCantidad())
+                .costoUnitario(req.getCostoUnitario())
+                .piezaSubajusteId(ps.getPiezaSubajuste_id()) // ✅ Long -> Long
+                .build();
+
+        piezaProveedorPrecioRepository.save(hist);
+
+        return ps;
     }
 }

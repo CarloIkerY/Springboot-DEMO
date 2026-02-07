@@ -1,26 +1,26 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AgregarPiezasSubajusteBatchRequest;
+import com.example.demo.dto.request.AgregarPiezaSubajusteRequestDTO;
+import com.example.demo.dto.response.PiezaSubajusteResponseDTO;
+import com.example.demo.mappers.PiezaSubajusteMapper;
+import com.example.demo.model.Pieza_subajuste;
 import com.example.demo.service.PiezaSubajusteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
-@RequestMapping("/pieza-subajustes")
+@RequestMapping("/api/pieza-subajuste")
 @RequiredArgsConstructor
 public class PiezaSubajusteController {
 
-    private final PiezaSubajusteService service;
+    private final PiezaSubajusteService piezaSubajusteService;
+    private final PiezaSubajusteMapper piezaSubajusteMapper;
 
-    @PostMapping("/batch")
-    public ResponseEntity<Map<String, Object>> agregarBatch(@RequestBody AgregarPiezasSubajusteBatchRequest req) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", service.agregarBatch(req)); // ✅ aquí va service
-        response.put("message", "Piezas agregadas correctamente al subajuste.");
-        return ResponseEntity.ok(response);
+    @PostMapping("/agregar")
+    public ResponseEntity<PiezaSubajusteResponseDTO> agregar(@Valid @RequestBody AgregarPiezaSubajusteRequestDTO req) {
+        Pieza_subajuste entity = piezaSubajusteService.agregarPiezaProveedorAOrden(req);
+        return ResponseEntity.ok(piezaSubajusteMapper.toDto(entity));
     }
 }

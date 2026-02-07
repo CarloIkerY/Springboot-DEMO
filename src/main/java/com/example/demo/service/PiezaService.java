@@ -59,7 +59,7 @@ public class PiezaService {
                     throw new RuntimeException("El pieza_id es obligatorio para eliminar.");
                 }
 
-                Pieza pieza = piezaRepository.findById(dto.getPieza_id())
+                Pieza pieza = piezaRepository.findById(Long.valueOf(dto.getPieza_id()))
                         .orElseThrow(() -> new RuntimeException("Pieza no encontrada."));
 
                 piezaRepository.delete(pieza);

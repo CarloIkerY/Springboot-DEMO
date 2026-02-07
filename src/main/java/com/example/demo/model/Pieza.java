@@ -17,7 +17,7 @@ import java.util.List;
 public class Pieza {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer pieza_id;
+    private long pieza_id;
 
     @Column(nullable = false)
     private String nombre;

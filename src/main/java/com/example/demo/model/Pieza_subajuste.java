@@ -17,7 +17,7 @@ import java.util.Date;
 public class Pieza_subajuste {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer piezaSubajuste_id;
+    private Long piezaSubajuste_id;
 
     @ManyToOne
     @JoinColumn(name = "subajuste_id", nullable = false)
@@ -48,10 +48,11 @@ public class Pieza_subajuste {
 
     @PrePersist
     public void prePersist() {
-        if (fecha_solicitud == null) fecha_solicitud = new java.util.Date();
+        if (fecha_solicitud == null) fecha_solicitud = new Date();
         if (subtotal == null && cantidad != null && costo_unitario_compra != null) {
             subtotal = cantidad.doubleValue() * costo_unitario_compra;
         }
     }
+
 
 }
