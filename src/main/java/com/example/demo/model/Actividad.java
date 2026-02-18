@@ -27,6 +27,9 @@ public class Actividad {
     @Column(nullable = false)
     private LocalDateTime fecha_registro;
 
+    @Column(nullable = true)
+    private Boolean terminado;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

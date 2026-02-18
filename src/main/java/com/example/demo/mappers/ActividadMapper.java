@@ -12,6 +12,7 @@ public interface ActividadMapper {
     @Mapping(source = "actividad_id", target = "actividad_id")
     @Mapping(source = "descripcion", target = "descripcion")
     @Mapping(source = "fecha_registro", target = "fecha_registro")
+    @Mapping(source = "terminado", target = "terminado")
     ActividadDTO toDto(Actividad entity);
 
     @Mapping(target = "actividad_id", ignore = true)

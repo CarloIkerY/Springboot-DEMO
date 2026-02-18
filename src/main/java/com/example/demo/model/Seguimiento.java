@@ -8,7 +8,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Seguimiento")
@@ -40,5 +42,5 @@ public class Seguimiento {
 
     @OneToMany(mappedBy = "seguimiento", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Ajuste_auto> ajusteAutos = new ArrayList<>();
+    private Set<Ajuste_auto> ajusteAutos = new HashSet<>();
 }

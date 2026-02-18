@@ -9,4 +9,5 @@ public class ActividadDTO {
     private Long actividad_id;
     private String descripcion;
     private LocalDateTime fecha_registro;
+    private Boolean terminado;
 }

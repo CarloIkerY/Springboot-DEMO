@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.ActividadTerminadaRequestDTO;
 import com.example.demo.dto.response.ActividadDTO;
 import com.example.demo.dto.response.OrdenResponseDTO;
 import com.example.demo.mappers.OrdenMapper;
@@ -7,6 +8,7 @@ import com.example.demo.model.Actividad;
 import com.example.demo.model.Ajuste_auto;
 import com.example.demo.model.Orden;
 import com.example.demo.model.Subajuste;
+import com.example.demo.repo.ActividadRespository;
 import com.example.demo.repo.AjusteAutoRepository;
 import com.example.demo.repo.OrdenRepository;
 import com.example.demo.repo.SubajusteRepository;
@@ -26,6 +28,7 @@ public class ActividadService {
 
     private final SubajusteRepository subajusteRepository;
     private final AjusteAutoRepository ajusteAutoRepository;
+    private final ActividadRespository actividadesRepository;
     private final OrdenRepository ordenRepository;
     private final OrdenMapper ordenMapper;
     @PersistenceContext
@@ -69,6 +72,35 @@ public class ActividadService {
 // 🔹 mapear directamente desde subajuste, evitando buscar la orden de nuevo
         Orden orden = ordenRepository.findByIdWithAllRelations(ordenId)
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+        return ordenMapper.toDto(orden);
+    }
+
+    @Transactional
+    public OrdenResponseDTO finalizarActividades(
+            Long ordenId,
+            Long ajusteAutoId,
+            Long subajusteId,
+            List<Long> actividadesIds) {
+
+        Orden orden = ordenRepository.findByIdWithAllRelations(ordenId)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        Ajuste_auto ajuste = orden.getSeguimiento().getAjusteAutos().stream()
+                .filter(a -> a.getAjusteAuto_id().equals(ajusteAutoId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Ajuste no pertenece a la orden"));
+
+        Subajuste subajuste = ajuste.getSubajustes().stream()
+                .filter(s -> s.getSubajuste_id().equals(subajusteId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Subajuste no pertenece al ajuste"));
+
+        subajuste.getActividades().forEach(act -> {
+            if (actividadesIds.contains(act.getActividad_id())) {
+                act.setTerminado(true);
+            }
+        });
+
         return ordenMapper.toDto(orden);
     }
 }
