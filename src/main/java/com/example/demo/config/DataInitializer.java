@@ -1,0 +1,673 @@
+package com.example.demo.config;
+
+import com.example.demo.model.*;
+import com.example.demo.repo.*;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+import com.example.demo.repo.ProveedorRepository;
+import com.example.demo.repo.PiezaRepository;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+public class DataInitializer {
+
+    private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final ClienteRepository clienteRepository;
+    private final EstadoRepository estadoRepository;
+    private final ProveedorRepository proveedorRepository;
+    private final PiezaRepository piezaRepository;
+
+    @PostConstruct
+    public void init() {
+        if (rolRepository.count() == 0) {
+            Rol admin = Rol.builder().nombre("ADMIN").build();
+            Rol chofer = Rol.builder().nombre("CHOFER").build();
+            Rol mecanico = Rol.builder().nombre("MECANICO").build();
+            Rol gerente = Rol.builder().nombre("GERENTE").build();
+
+
+            rolRepository.save(admin);
+            rolRepository.save(chofer);
+            rolRepository.save(mecanico);
+            rolRepository.save(gerente);
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            // --- Usuarios base ---
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("admin")
+                    .apellido("admin")
+                    .correo("admin@demo.com")
+                    .contrasena(encoder.encode("admin123"))
+                    .rol(admin)
+                    .celular("5523489076")
+                    .disponible(false)
+
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("Pedro")
+                    .apellido("Perez")
+                    .correo("perez@demo.com")
+                    .contrasena(encoder.encode("chofer123"))
+                    .rol(chofer)
+                    .celular("5529626956")
+                    .disponible(true)
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("maxines")
+                    .apellido("Perez")
+                    .correo("maxi@demo.com")
+                    .contrasena(encoder.encode("robotics123"))
+                    .rol(chofer)
+                    .celular("5627539129")
+                    .disponible(true)
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("Roberto")
+                    .apellido("Perez")
+                    .correo("roberto@demo.com")
+                    .contrasena(encoder.encode("mecanico123"))
+                    .rol(mecanico)
+                    .celular("8116623074")
+                    .disponible(true)
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("juan")
+                    .apellido("Perez")
+                    .correo("juanto@demo.com")
+                    .contrasena(encoder.encode("mecanico123"))
+                    .rol(mecanico)
+                    .celular("5539741286")
+                    .disponible(true)
+                    .build());
+
+            usuarioRepository.save(Usuario.builder()
+                    .nombre("gerente")
+                    .apellido("gerente")
+                    .correo("gerente@demo.com")
+                    .contrasena(encoder.encode("gerente123"))
+                    .rol(gerente)
+                    .celular("5523489076")
+                    .disponible(false)
+                    .build());
+
+        }
+//  PROVEEDORES BASE
+        if (proveedorRepository.count() == 0) {
+
+            List<String> proveedores = List.of(
+                    "Santillan",
+                    "Franco",
+                    "Edzna",
+                    "California",
+                    "Embler",
+                    "Univparts",
+                    "Reyes",
+                    "JC",
+                    "Vero",
+                    "Rojas",
+                    "Guillén",
+                    "Hitachito",
+                    "Servicio omar (alineadora)",
+                    "Ríos",
+                    "Abigail",
+                    "Autoclimas",
+                    "Franco portales",
+                    "Autozone",
+                    "Runsa",
+                    "Caosa",
+                    "Cerressa",
+                    "Nieto",
+                    "Legaría",
+                    "Euroivan",
+                    "Grupi",
+                    "Gma portales",
+                    "Gma aztecas",
+                    "Panda",
+                    "Haiba",
+                    "Mercado libre",
+                    "Isaías (rectificadora)",
+                    "Lupe reyes",
+                    "Amazon",
+                    "Pension",
+                    "Reprollan",
+                    "Unión",
+                    "Ruiz",
+                    "América llantera",
+                    "Eléctrico gerardo",
+                    "Eléctrico romero"
+            );
+            proveedores.forEach(nombre -> {
+                proveedorRepository.save(
+                        Proveedor.builder()
+                                .nombre(nombre)
+                                .telefono("N/A")
+                                .correo("N/A")
+                                .build()
+                );
+            });
+        }
+
+// LISTA DE REFACCIONES y PIEZAS
+        if (piezaRepository.count() == 0) {
+            Proveedor proveedorGenerico = proveedorRepository.findAll().get(0);
+
+            List<String> piezas = List.of(
+                    "Servicio de afinación de motor",
+                    "Filtro aire",
+                    "Filtro aceite",
+                    "Filtro polen",
+                    "Bujías",
+                    "Cables de bujías",
+                    "Bobinas de encendido",
+                    "Alternador",
+                    "Marcha",
+                    "Cuerpo de aceleración",
+                    "Compresor aire acondicionado",
+                    "Banda de accesorios",
+                    "Kit de distribución",
+                    "Banda de distribución",
+                    "Tensor distribución",
+                    "Tensor banda accesorios",
+                    "Polea loca",
+                    "Bomba de agua",
+                    "Balatas delanteras",
+                    "Balatas traseras",
+                    "Rectificado de discos delanteros",
+                    "Rectificado de discos traseros",
+                    "Rectificado de tambores traseros",
+                    "Rectificado de cremallera",
+                    "Limpieza y ajuste de frenos",
+                    "Calipers",
+                    "Repuesto de calipers",
+                    "Juntas homocineticas",
+                    "Tricetas",
+                    "Flechas",
+                    "Baleros delanteros",
+                    "Baleros traseros",
+                    "Maza delantera",
+                    "Maza trasera",
+                    "Amortiguadores delanteros",
+                    "Amortiguadores traseros",
+                    "Bases amortiguadores delanteros",
+                    "Bases amortiguadores traseros",
+                    "Horquillas inferiores",
+                    "Horquillas superiores",
+                    "Brazos cortos",
+                    "Brazos largos",
+                    "Gomas de barra delanteras",
+                    "Gomas de barra traseras",
+                    "Tornillos estabilizadores",
+                    "Bujes de horquilla",
+                    "Rótulas",
+                    "Mangos delanteros",
+                    "Mangos traseros",
+                    "Puente delantero",
+                    "Puente trasero",
+                    "Soportes de motor",
+                    "Soporte de caja",
+                    "Soporte inferior",
+                    "Soporte superior",
+                    "Soporte frontal",
+                    "Soporte trasero",
+                    "Junta tapa punterías",
+                    "Junta cárter",
+                    "Retén cigüeñal lado cala",
+                    "Retén cigüeñal lado poleas",
+                    "Retén árbol de levas",
+                    "Sensor maf",
+                    "Sensor map",
+                    "Sensor de oxígeno",
+                    "Sensor de cigüeñal",
+                    "Sensor de árbol de levas",
+                    "Sensor de detonación",
+                    "Scanner de motor",
+                    "Sensor temperatura",
+                    "Radiador",
+                    "Moto ventilador",
+                    "Bomba de gasolina",
+                    "Switch de encendido",
+                    "Chapas delanteras",
+                    "Chapas traseras",
+                    "Chapa cajuela",
+                    "Chapa cofre",
+                    "Amortiguador cofre",
+                    "Amortiguador cajuela",
+                    "Limpiadores delanteros",
+                    "Limpiadores traseros",
+                    "Calaveras",
+                    "Faros",
+                    "Focos stop",
+                    "Foco alta",
+                    "Foco baja",
+                    "Foco de niebla",
+                    "Foco cuartos",
+                    "Foco direccional"
+            );
+            piezas.forEach(nombre -> {
+                piezaRepository.save(
+                        Pieza.builder()
+                                .nombre(nombre)
+                                .costo_unitario(0.0)
+                                .build()
+                );
+            });
+
+        }
+
+
+        // --- CLIENTES DE PRUEBA ---
+        if (clienteRepository.count() == 0) {
+
+
+            // CLIENTE 1 JORGE (3 AUTOS)
+
+            Cliente c1 = new Cliente();
+            c1.setNombre("Jorge");
+            c1.setCelular("1234567890");
+            c1.setDireccion("New York");
+            c1.setAutos(new ArrayList<>());
+
+            Auto a1 = new Auto();
+            a1.setMarca("Nissan");
+            a1.setModelo("Sentra");
+            a1.setAnio(2020);
+            a1.setPlaca("ABC123");
+            a1.setColor("Rojo");
+            a1.setCliente(c1);
+            c1.getAutos().add(a1);
+
+            Auto a1b = new Auto();
+            a1b.setMarca("Toyota");
+            a1b.setModelo("Corolla");
+            a1b.setAnio(2021);
+            a1b.setPlaca("JOR-222");
+            a1b.setColor("Azul");
+            a1b.setCliente(c1);
+            c1.getAutos().add(a1b);
+
+            Auto a1c = new Auto();
+            a1c.setMarca("Honda");
+            a1c.setModelo("Civic");
+            a1c.setAnio(2019);
+            a1c.setPlaca("JOR-333");
+            a1c.setColor("Gris");
+            a1c.setCliente(c1);
+            c1.getAutos().add(a1c);
+
+
+            // CLIENTE 2 LAURA
+
+            Cliente c2 = new Cliente();
+            c2.setNombre("Laura");
+            c2.setCelular("5551112222");
+            c2.setDireccion("CDMX");
+            c2.setAutos(new ArrayList<>());
+
+            Auto a2 = new Auto();
+            a2.setMarca("Toyota");
+            a2.setModelo("Corolla");
+            a2.setAnio(2021);
+            a2.setPlaca("XYZ789");
+            a2.setColor("Azul");
+            a2.setCliente(c2);
+            c2.getAutos().add(a2);
+
+
+            // CLIENTE 3 PEDRO
+
+            Cliente c3 = new Cliente();
+            c3.setNombre("Pedro");
+            c3.setCelular("5553334444");
+            c3.setDireccion("Monterrey");
+            c3.setAutos(new ArrayList<>());
+
+            Auto a3 = new Auto();
+            a3.setMarca("Honda");
+            a3.setModelo("Civic");
+            a3.setAnio(2018);
+            a3.setPlaca("PLT123");
+            a3.setColor("Negro");
+            a3.setCliente(c3);
+            c3.getAutos().add(a3);
+
+            Cliente c4 = new Cliente();
+            c4.setNombre("María");
+            c4.setCelular("5552221111");
+            c4.setDireccion("Guadalajara");
+            c4.setAutos(new ArrayList<>());
+
+            Auto a4 = new Auto();
+            a4.setMarca("Ford");
+            a4.setModelo("Focus");
+            a4.setAnio(2019);
+            a4.setPlaca("FRD456");
+            a4.setColor("Gris");
+            a4.setCliente(c4);
+            c4.getAutos().add(a4);
+
+            Cliente c5 = new Cliente();
+            c5.setNombre("Luis");
+            c5.setCelular("5557778888");
+            c5.setDireccion("Puebla");
+            c5.setAutos(new ArrayList<>());
+
+            Auto a5 = new Auto();
+            a5.setMarca("Mazda");
+            a5.setModelo("CX-3");
+            a5.setAnio(2020);
+            a5.setPlaca("MAZ789");
+            a5.setColor("Blanco");
+            a5.setCliente(c5);
+            c5.getAutos().add(a5);
+
+            Cliente c6 = new Cliente();
+            c6.setNombre("Valeria");
+            c6.setCelular("5556665555");
+            c6.setDireccion("Querétaro");
+            c6.setAutos(new ArrayList<>());
+
+            Auto a6 = new Auto();
+            a6.setMarca("Kia");
+            a6.setModelo("Rio");
+            a6.setAnio(2021);
+            a6.setPlaca("KIA321");
+            a6.setColor("Azul Marino");
+            a6.setCliente(c6);
+            c6.getAutos().add(a6);
+
+            Cliente c7 = new Cliente();
+            c7.setNombre("Fernando");
+            c7.setCelular("5551239876");
+            c7.setDireccion("Tijuana");
+            c7.setAutos(new ArrayList<>());
+
+            Auto a7 = new Auto();
+            a7.setMarca("Volkswagen");
+            a7.setModelo("Jetta");
+            a7.setAnio(2017);
+            a7.setPlaca("VW654");
+            a7.setColor("Negro");
+            a7.setCliente(c7);
+            c7.getAutos().add(a7);
+
+            Cliente c8 = new Cliente();
+            c8.setNombre("Ana");
+            c8.setCelular("5553332221");
+            c8.setDireccion("León");
+            c8.setAutos(new ArrayList<>());
+
+            Auto a8 = new Auto();
+            a8.setMarca("Hyundai");
+            a8.setModelo("Tucson");
+            a8.setAnio(2022);
+            a8.setPlaca("HYD987");
+            a8.setColor("Gris Oscuro");
+            a8.setCliente(c8);
+            c8.getAutos().add(a8);
+
+            Cliente c9 = new Cliente();
+            c9.setNombre("Miguel");
+            c9.setCelular("5559090909");
+            c9.setDireccion("Cancún");
+            c9.setAutos(new ArrayList<>());
+
+            Auto a9 = new Auto();
+            a9.setMarca("Chevrolet");
+            a9.setModelo("Aveo");
+            a9.setAnio(2021);
+            a9.setPlaca("CHE111");
+            a9.setColor("Rojo");
+            a9.setCliente(c9);
+            c9.getAutos().add(a9);
+
+            Cliente c10 = new Cliente();
+            c10.setNombre("Elena");
+            c10.setCelular("5554567890");
+            c10.setDireccion("Toluca");
+            c10.setAutos(new ArrayList<>());
+
+            Auto a10 = new Auto();
+            a10.setMarca("Jeep");
+            a10.setModelo("Compass");
+            a10.setAnio(2019);
+            a10.setPlaca("JEP202");
+            a10.setColor("Verde Olivo");
+            a10.setCliente(c10);
+            c10.getAutos().add(a10);
+
+            Cliente c11 = new Cliente();
+            c11.setNombre("Lucía");
+            c11.setCelular("5551110000");
+            c11.setDireccion("Veracruz");
+            c11.setAutos(new ArrayList<>());
+
+            Auto a11 = new Auto();
+            a11.setMarca("BMW");
+            a11.setModelo("Serie 1");
+            a11.setAnio(2023);
+            a11.setPlaca("BMW333");
+            a11.setColor("Blanco");
+            a11.setCliente(c11);
+            c11.getAutos().add(a11);
+
+            Cliente c12 = new Cliente();
+            c12.setNombre("Pablo");
+            c12.setCelular("5551010101");
+            c12.setDireccion("Hermosillo");
+            c12.setAutos(new ArrayList<>());
+
+            Auto a12 = new Auto();
+            a12.setMarca("Audi");
+            a12.setModelo("A3");
+            a12.setAnio(2022);
+            a12.setPlaca("AUD444");
+            a12.setColor("Negro");
+            a12.setCliente(c12);
+            c12.getAutos().add(a12);
+
+            Cliente c13 = new Cliente();
+            c13.setNombre("Raúl");
+            c13.setCelular("5557776666");
+            c13.setDireccion("Durango");
+            c13.setAutos(new ArrayList<>());
+
+            Auto a13 = new Auto();
+            a13.setMarca("Suzuki");
+            a13.setModelo("Swift");
+            a13.setAnio(2018);
+            a13.setPlaca("SUZ555");
+            a13.setColor("Amarillo");
+            a13.setCliente(c13);
+            c13.getAutos().add(a13);
+
+            Cliente c14 = new Cliente();
+            c14.setNombre("Camila");
+            c14.setCelular("5554443332");
+            c14.setDireccion("Mazatlán");
+            c14.setAutos(new ArrayList<>());
+
+            Auto a14 = new Auto();
+            a14.setMarca("Seat");
+            a14.setModelo("Ibiza");
+            a14.setAnio(2020);
+            a14.setPlaca("SEA666");
+            a14.setColor("Rosa");
+            a14.setCliente(c14);
+            c14.getAutos().add(a14);
+
+            Cliente c15 = new Cliente();
+            c15.setNombre("José");
+            c15.setCelular("5559876543");
+            c15.setDireccion("Mérida");
+            c15.setAutos(new ArrayList<>());
+
+            Auto a15 = new Auto();
+            a15.setMarca("Peugeot");
+            a15.setModelo("208");
+            a15.setAnio(2019);
+            a15.setPlaca("PEU777");
+            a15.setColor("Plateado");
+            a15.setCliente(c15);
+            c15.getAutos().add(a15);
+
+            Cliente c16 = new Cliente();
+            c16.setNombre("Andrés");
+            c16.setCelular("5550900789");
+            c16.setDireccion("Colima");
+            c16.setAutos(new ArrayList<>());
+
+            Auto a16 = new Auto();
+            a16.setMarca("Subaru");
+            a16.setModelo("Impreza");
+            a16.setAnio(2023);
+            a16.setPlaca("SUB888");
+            a16.setColor("Azul Marino");
+            a16.setCliente(c16);
+            c16.getAutos().add(a16);
+
+            Cliente c17 = new Cliente();
+            c17.setNombre("Daniela");
+            c17.setCelular("5551122334");
+            c17.setDireccion("Aguascalientes");
+            c17.setAutos(new ArrayList<>());
+
+            Auto a17 = new Auto();
+            a17.setMarca("Fiat");
+            a17.setModelo("Punto");
+            a17.setAnio(2017);
+            a17.setPlaca("FIA999");
+            a17.setColor("Gris Claro");
+            a17.setCliente(c17);
+            c17.getAutos().add(a17);
+
+            Cliente c18 = new Cliente();
+            c18.setNombre("Sergio");
+            c18.setCelular("5556677889");
+            c18.setDireccion("Chihuahua");
+            c18.setAutos(new ArrayList<>());
+
+            Auto a18 = new Auto();
+            a18.setMarca("Volkswagen");
+            a18.setModelo("Golf");
+            a18.setAnio(2021);
+            a18.setPlaca("VOL111");
+            a18.setColor("Rojo");
+            a18.setCliente(c18);
+            c18.getAutos().add(a18);
+
+            Cliente c19 = new Cliente();
+            c19.setNombre("Gabriela");
+            c19.setCelular("5553344556");
+            c19.setDireccion("Morelia");
+            c19.setAutos(new ArrayList<>());
+
+            Auto a19 = new Auto();
+            a19.setMarca("Renault");
+            a19.setModelo("Kwid");
+            a19.setAnio(2022);
+            a19.setPlaca("REN222");
+            a19.setColor("Blanco");
+            a19.setCliente(c19);
+            c19.getAutos().add(a19);
+
+            Cliente c20 = new Cliente();
+            c20.setNombre("Fernando");
+            c20.setCelular("5557788990");
+            c20.setDireccion("Cuernavaca");
+            c20.setAutos(new ArrayList<>());
+
+            Auto a20 = new Auto();
+            a20.setMarca("Volvo");
+            a20.setModelo("XC40");
+            a20.setAnio(2023);
+            a20.setPlaca("VOL333");
+            a20.setColor("Negro");
+            a20.setCliente(c20);
+            c20.getAutos().add(a20);
+
+            clienteRepository.saveAll(List.of(
+                    c1, c2, c3, c4, c5,
+                    c6, c7, c8, c9, c10,
+                    c11, c12, c13, c14, c15,
+                    c16, c17, c18, c19, c20
+            ));
+
+
+        }
+        if (estadoRepository.count() == 0) {
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Sin Asignacion")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Asignado a chofer")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente recolección")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente llegada a taller")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Asignado a mecánico")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("En taller - pendiente revisión")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Diagnostico enviado")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente cotización")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Diagnostico enviado")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("En reparación")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente aprobación")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Finalización mecánico")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Pendiente VoBo")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("En entrega")
+                    .build());
+
+            estadoRepository.save(Estado.builder()
+                    .estado("Finalizado")
+                    .build());
+        }
+    }
+}
