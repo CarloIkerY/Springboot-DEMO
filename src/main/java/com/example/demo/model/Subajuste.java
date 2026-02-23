@@ -40,6 +40,9 @@ public class Subajuste {
     @OneToMany(mappedBy = "subajuste", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pieza_subajuste> piezaSubajustes;
 
+    @Column(nullable = false)
+    private Boolean terminado = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

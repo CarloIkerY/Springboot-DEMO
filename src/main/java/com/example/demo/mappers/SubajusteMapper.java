@@ -12,5 +12,6 @@ public interface SubajusteMapper {
     @Mapping(source = "descripcion", target = "descripcion")
     @Mapping(source = "fecha_registro", target = "fecha_registro")
     @Mapping(source = "actividades", target = "actividades")
+    @Mapping(source = "terminado", target = "terminado")
     SubajusteDTO toDto(Subajuste entity);
 }

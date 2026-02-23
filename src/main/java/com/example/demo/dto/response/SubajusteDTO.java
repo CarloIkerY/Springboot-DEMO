@@ -11,4 +11,5 @@ public class SubajusteDTO {
     private String descripcion;
     private LocalDateTime fecha_registro;
     private List<ActividadDTO> actividades;
+    private Boolean terminado;
 }

@@ -5,7 +5,15 @@ import com.example.demo.model.Orden;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = SeguimientoMapper.class)
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                SeguimientoMapper.class,
+                AjusteAutoMapper.class,
+                SubajusteMapper.class,
+                ActividadMapper.class
+        }
+)
 public interface OrdenMapper {
     @Mapping(source = "orden_id", target = "orden_id")
     @Mapping(source = "numero_orden", target = "numeroOrden")
