@@ -9,6 +9,8 @@ import com.example.demo.mappers.AjusteAutoMapper;
 import com.example.demo.mappers.OrdenMapper;
 import com.example.demo.model.*;
 import com.example.demo.repo.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,9 @@ public class AjusteService {
     private final OrdenRepository ordenRepository;
     private final OrdenMapper ordenMapper;
     private final AjusteAutoMapper ajusteAutoMapper;
+    private final SubajusteRepository subajusteRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Transactional
     public OrdenResponseDTO crearAjustes(Long ordenId, List<AjusteDTO> ajustes) {
@@ -145,5 +150,45 @@ public class AjusteService {
         Orden saved = ordenRepository.save(orden);
 
         return ordenMapper.toDto(saved);
+    }
+
+    @Transactional
+    public OrdenResponseDTO finalizarAjustes(Long orden_id, List<Long> ajustesAuto_id) {
+        for(Long ajusteAuto_id : ajustesAuto_id) {
+            Ajuste_auto ajusteAuto = ajusteAutoRepository.findById(ajusteAuto_id)
+                    .orElseThrow(() -> new RuntimeException("Ajuste no encontrado"));
+
+            if(!ajusteAuto.getSeguimiento().getOrden().getOrden_id().equals(orden_id)) {
+                throw new RuntimeException("El ajuste no pertenece a la orden");
+            }
+
+            List<Subajuste> subajustes = subajusteRepository.findAllByAjusteAutoId(ajusteAuto_id);
+
+            if(subajustes.isEmpty()) {
+                throw new RuntimeException("El ajuste no tiene subajustes");
+            }
+
+            boolean todasTerminadas = subajustes.stream()
+                    .allMatch(s -> Boolean.TRUE.equals(s.getTerminado()));
+
+            if(!todasTerminadas) {
+                throw new RuntimeException(
+                        "No se puede finalizar el ajuste " + ajusteAuto_id +
+                                " porque aún hay subajustes pendientes"
+                );
+            }
+
+            ajusteAuto.setTerminado(true);
+            ajusteAuto.setFecha_finalizado(LocalDateTime.now());
+            ajusteAutoRepository.save(ajusteAuto);
+        }
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Orden orden = ordenRepository.findByIdWithAllRelations(orden_id)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        return ordenMapper.toDto(orden);
     }
 }

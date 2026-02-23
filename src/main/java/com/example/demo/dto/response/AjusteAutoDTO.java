@@ -9,7 +9,8 @@ import java.util.List;
 public class AjusteAutoDTO {
     private Long ajusteAuto_id;
     private String descripcion;
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fecha_creacion;
+    private Boolean terminado;
 
     private AjusteSimpleDTO ajuste;
     private List<SubajusteDTO> subajustes;

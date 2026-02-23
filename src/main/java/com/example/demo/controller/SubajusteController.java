@@ -80,7 +80,7 @@ public class SubajusteController {
                 dto.getSubajustes()
         );
 
-        response.put("message", "Subajustes creados correctamente.");
+        response.put("message", "Subajustes finalizados correctamente.");
         response.put("data", result);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

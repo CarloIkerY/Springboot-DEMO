@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.AceptarAjustesRequestDTO;
 import com.example.demo.dto.request.AjusteAutoRequestDTO;
+import com.example.demo.dto.request.AjusteAutoTerminadoDTO;
 import com.example.demo.dto.request.AjusteAutoUpdateRequestDTO;
 import com.example.demo.dto.response.AjusteAutoResponseDTO;
 import com.example.demo.dto.response.OrdenResponseDTO;
@@ -95,7 +96,6 @@ public class AjusteController {
 
         Map<String, Object> response = new HashMap<>();
 
-        // Validaciones básicas
         if (dto.getOrden_id() == null) {
             response.put("message", "La orden es obligatoria.");
             response.put("data", null);
@@ -112,6 +112,33 @@ public class AjusteController {
         OrdenResponseDTO result = ajusteService.aceptarAjustes(dto);
 
         response.put("message", "Estado de ajustes actualizado correctamente.");
+        response.put("data", result);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/terminarActividades")
+    public ResponseEntity<?> terminarActividades(@RequestBody AjusteAutoTerminadoDTO dto) {
+        Map<String, Object> response = new HashMap<>();
+
+        if(dto.getOrden_id() == null) {
+            response.put("message", "La orden_id es obligatoria.");
+            response.put("data", null);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if(dto.getAjustesAuto_id() == null) {
+            response.put("message", "Los ajustesAuto_id son obligatorios.");
+            response.put("data", null);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        OrdenResponseDTO result = ajusteService.finalizarAjustes(
+                dto.getOrden_id(),
+                dto.getAjustesAuto_id()
+        );
+
+        response.put("message", "AjustesAuto finalizado correctamente.");
         response.put("data", result);
 
         return ResponseEntity.ok(response);

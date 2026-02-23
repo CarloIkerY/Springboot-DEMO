@@ -39,6 +39,9 @@ public class Ajuste_auto {
     @Column(nullable = true)
     private LocalDateTime fecha_finalizado;
 
+    @Column(nullable = false)
+    private Boolean terminado = false;
+
 
     @OneToMany(mappedBy = "ajusteAuto", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subajuste> subajustes = new HashSet<>();

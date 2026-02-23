@@ -14,6 +14,7 @@ public interface AjusteAutoMapper {
     @Mapping(source = "ajusteAuto_id", target = "ajusteAuto_id")
     @Mapping(source = "fecha_creacion", target = "fechaCreacion")
     @Mapping(source = "subajustes", target = "subajustes")
+    @Mapping(source = "terminado", target = "terminado")
 
     // Ajuste
     @Mapping(source = "ajuste.ajuste_id", target = "ajuste_id")

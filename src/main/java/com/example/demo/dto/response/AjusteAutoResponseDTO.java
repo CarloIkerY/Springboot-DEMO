@@ -22,4 +22,6 @@ public class AjusteAutoResponseDTO {
     private String estado;
 
     private List<SubajusteDTO> subajustes;
+
+    private Boolean terminado;
 }
