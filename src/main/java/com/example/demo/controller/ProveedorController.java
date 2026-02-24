@@ -17,18 +17,20 @@ import java.util.Map;
 @RequestMapping("/proveedor")
 @RequiredArgsConstructor
 public class ProveedorController {
-    @Autowired
-    private ProveedorService proveedorService;
+
+    private final ProveedorService proveedorService;
 
     @GetMapping("/listado")
     public ResponseEntity<?> obtenerProveedores() {
         List<Proveedor> proveedores = proveedorService.listarProveedores();
 
         return ResponseEntity.ok(Map.of(
+                "success", true,
                 "data", proveedores,
                 "message", "Lista de proveedores obtenida correctamente"
         ));
     }
+
     @PostMapping("/accion")
     public ResponseEntity<?> accionProveedor(@RequestBody ProveedorDTO dto) {
 
@@ -62,5 +64,4 @@ public class ProveedorController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
 }

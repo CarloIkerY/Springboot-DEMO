@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -17,68 +18,51 @@ public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
 
-    // GET /usuarios/choferes/disponibles
     @GetMapping("/choferes/disponibles")
     public ResponseEntity<UsuariosResponseDTO> obtenerChoferesDisponibles() {
-
-        // Busca todos los usuarios con rol CHOFER y disponibles = true
-        List<Usuario> usuarios = usuarioRepository
-                .findByRol_NombreAndDisponible("CHOFER", true);
-
-        // Mapea Usuario -> UsuarioChoferDTO
-        List<UsuarioChoferDTO> data = usuarios.stream().map(u ->
-                UsuarioChoferDTO.builder()
-                        .id(u.getUsuario_id())
-                        .nombre(
-                                (u.getNombre() != null ? u.getNombre() : "") + " " +
-                                        (u.getApellido() != null ? u.getApellido() : "")
-                        )
-                        .email(u.getCorreo())
-                        .telefono(u.getCelular())
-                        .tipo(u.getRol() != null ? u.getRol().getNombre().toLowerCase() : null)
-                        .disponible(Boolean.TRUE.equals(u.getDisponible()))
-                        .vehiculo_asignado(null) // por ahora sin vehículo asignado directo
-                        .build()
-        ).toList();
-
-        // Arma response envolviendo la lista
-        UsuariosResponseDTO respuesta = UsuariosResponseDTO.builder()
-                .success(true)
-                .data(data)
-                .build();
-
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(obtenerDisponiblesPorRol("CHOFER"));
     }
 
     @GetMapping("/mecanicos/disponibles")
     public ResponseEntity<UsuariosResponseDTO> obtenerMecanicosDisponibles() {
+        return ResponseEntity.ok(obtenerDisponiblesPorRol("MECANICO"));
+    }
 
-        // Busca todos los usuarios con rol MECANICO
-        List<Usuario> usuarios = usuarioRepository
-                .findByRol_NombreAndDisponible("MECANICO", true);
 
-        // Mapea Usuario
-        List<UsuarioChoferDTO> data = usuarios.stream().map(u ->
-                UsuarioChoferDTO.builder()
-                        .id(u.getUsuario_id())
-                        .nombre(
-                                (u.getNombre() != null ? u.getNombre() : "") + " " +
-                                        (u.getApellido() != null ? u.getApellido() : "")
-                        )
-                        .email(u.getCorreo())
-                        .telefono(u.getCelular())
-                        .tipo(u.getRol() != null ? u.getRol().getNombre().toLowerCase() : null) // "mecanico"
-                        .disponible(Boolean.TRUE.equals(u.getDisponible()))
-                        .vehiculo_asignado(null)
-                        .build()
-        ).toList();
+    private UsuariosResponseDTO obtenerDisponiblesPorRol(String rol) {
 
-        UsuariosResponseDTO respuesta = UsuariosResponseDTO.builder()
+
+        List<Usuario> usuarios = usuarioRepository.findByRol_NombreAndDisponible(rol, true);
+        if (usuarios == null) usuarios = Collections.emptyList();
+
+        List<UsuarioChoferDTO> data = usuarios.stream()
+                .map(this::toUsuarioChoferDTO)
+                .toList();
+
+        return UsuariosResponseDTO.builder()
                 .success(true)
                 .data(data)
                 .build();
+    }
 
-        return ResponseEntity.ok(respuesta);
+    private UsuarioChoferDTO toUsuarioChoferDTO(Usuario u) {
+
+        String nombre = ((u.getNombre() != null ? u.getNombre() : "") + " " +
+                (u.getApellido() != null ? u.getApellido() : "")).trim();
+
+        String tipo = (u.getRol() != null && u.getRol().getNombre() != null)
+                ? u.getRol().getNombre().toLowerCase()
+                : null;
+
+        return UsuarioChoferDTO.builder()
+                .id(u.getUsuario_id())
+                .nombre(nombre)
+                .email(u.getCorreo())
+                .telefono(u.getCelular())
+                .tipo(tipo)
+                .disponible(Boolean.TRUE.equals(u.getDisponible()))
+                .vehiculo_asignado(null)
+                .build();
     }
 }
 
