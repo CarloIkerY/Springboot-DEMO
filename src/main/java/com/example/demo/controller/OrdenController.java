@@ -20,6 +20,24 @@ import java.util.Map;
 public class OrdenController {
     private final OrdenService ordenService;
 
+    // Helpers para estandarizar respuestas
+    private Map<String, Object> ok(Object data, String message) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("success", true);
+        res.put("data", data);
+        res.put("message", message);
+        return res;
+    }
+
+    private Map<String, Object> fail(String message) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("success", false);
+        res.put("data", null);
+        res.put("message", message);
+        return res;
+    }
+
+
     @PostMapping("/crear")
     public ResponseEntity<?> crear(@RequestBody OrdenDTO dto) {
 
