@@ -128,6 +128,8 @@ public class OrdenController {
             ));
         }
 
+
+
         if (dto.getFecha_recoleccion() == null) {
             return ResponseEntity.badRequest().body(Map.of(
                     "message", "La fecha para recolección es obligatoria."
