@@ -190,4 +190,35 @@ public class OrdenService {
         return ordenRepository.findOrdenesAsignadasAMecanico(mecanicoId);
     }
 
+    public Orden agendarFechaEntrega(OrdenDTO dto) {
+
+        Orden orden = ordenRepository.findById(dto.getOrden_id())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Orden no encontrada"
+                ));
+
+        Seguimiento seguimiento = orden.getSeguimiento();
+        if (seguimiento == null) {
+            throw new RuntimeException("La orden no tiene seguimiento asignado");
+        }
+
+        Estado estadoAsignado = estadoRepository.findById(14L)
+                .orElseThrow(() -> new RuntimeException("Estado 14 no encontrado"));
+
+        // Actualizar estado y fecha
+        seguimiento.setEstado(estadoAsignado);
+        seguimiento.setFecha_actualizacion(LocalDateTime.now());
+
+        LocalDateTime ahora = LocalDateTime.now();
+
+        if (!dto.getFecha_entrega().isAfter(ahora)) {
+            throw new RuntimeException(
+                    "La fecha de recolección no puede ser menor o igual a la fecha y hora actual"
+            );
+        }
+
+        orden.setFecha_entrega(dto.getFecha_entrega());
+
+        return ordenRepository.save(orden);
+    }
 }

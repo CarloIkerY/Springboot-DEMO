@@ -206,4 +206,31 @@ public class OrdenController {
         ));
     }
 
+    @PostMapping("/agendarEntrega")
+    public ResponseEntity<?> agendarEntrega(@RequestBody OrdenDTO dto) {
+        if (dto.getOrden_id() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "El ID de Orden es obligatorio."
+            ));
+        }
+
+        if (dto.getFecha_entrega() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "La fecha para entrega es obligatoria."
+            ));
+        }
+
+        try {
+            Orden orden = ordenService.agendarFechaEntrega(dto);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Fecha de entrega agendada correctamente",
+                    "data", orden
+            ));
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of(
+                    "message", e.getReason()
+            ));
+        }
+    }
 }
