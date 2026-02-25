@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.OrdenDTO;
+import com.example.demo.dto.request.FinalizarOrdenRequestDTO;
 import com.example.demo.model.Orden;
 import com.example.demo.service.OrdenService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RequestMapping("/ordenes")
 @RequiredArgsConstructor
 public class OrdenController {
+
     private final OrdenService ordenService;
 
     // Helpers para estandarizar respuestas
@@ -36,7 +38,6 @@ public class OrdenController {
         res.put("message", message);
         return res;
     }
-
 
     @PostMapping("/crear")
     public ResponseEntity<?> crear(@RequestBody OrdenDTO dto) {
@@ -114,9 +115,7 @@ public class OrdenController {
         } catch (RuntimeException ex) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of(
-                            "message", ex.getMessage()
-                    ));
+                    .body(Map.of("message", ex.getMessage()));
         }
     }
 
@@ -195,6 +194,7 @@ public class OrdenController {
                 "message", "Órdenes asignadas al chofer obtenidas correctamente"
         ));
     }
+
     @GetMapping("/mecanico/{mecanicoId}")
     public ResponseEntity<?> obtenerOrdenesAsignadasAMecanico(@PathVariable Long mecanicoId) {
 
@@ -206,4 +206,32 @@ public class OrdenController {
         ));
     }
 
+    // Finalizar Orden (entrega al cliente)
+    @PatchMapping("/{ordenId}/finalizar")
+    public ResponseEntity<?> finalizarOrden(
+            @PathVariable Long ordenId,
+            @RequestBody FinalizarOrdenRequestDTO body
+    ) {
+        if (body == null || body.getUsuarioId() == null) {
+            return ResponseEntity.badRequest().body(
+                    fail("El usuarioId es obligatorio para finalizar la orden.")
+            );
+        }
+
+        try {
+            Orden ordenFinalizada = ordenService.finalizarOrden(
+                    ordenId,
+                    body.getUsuarioId(),
+                    body.getFechaEntrega()
+            );
+
+            return ResponseEntity.ok(
+                    ok(ordenFinalizada, "Orden finalizada correctamente")
+            );
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(fail(e.getReason()));
+        }
+    }
 }
